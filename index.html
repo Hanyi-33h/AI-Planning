@@ -188,6 +188,38 @@
   .goal-box li{ color:rgba(255,255,255,.85); border-top:1px solid rgba(255,255,255,.12); }
   .goal-box li::before{ color:var(--brass-light); }
 
+  /* ---------- API section (dark) ---------- */
+  section.dark{ background:var(--ink); color:var(--white); }
+  section.dark .section-head h2{ color:var(--white); }
+  section.dark .section-head p{ color:rgba(255,255,255,.6); }
+  section.dark .eyebrow{ color:var(--brass-light); }
+  section.dark .eyebrow::before{ background:var(--brass-light); }
+  .api-cols{ display:grid; grid-template-columns:1.1fr .9fr; gap:24px; margin-bottom:56px; }
+  .api-card{
+    background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.14);
+    border-radius:6px; padding:30px 32px;
+  }
+  .api-card h4{ font-size:18.9px; color:var(--brass-light); margin-bottom:16px; font-weight:700; }
+  .api-card p{ font-size:15.3px; color:rgba(255,255,255,.82); line-height:1.65; margin-bottom:14px; }
+  .api-card p:last-child{ margin-bottom:0; }
+  .api-card ul{ list-style:none; display:flex; flex-direction:column; gap:16px; }
+  .api-card li{ display:flex; gap:12px; font-size:15.3px; color:rgba(255,255,255,.82); line-height:1.55; }
+  .api-card li::before{
+    content:""; width:8px; height:8px; border-radius:50%; background:var(--brass-light);
+    flex-shrink:0; margin-top:8px;
+  }
+  .api-compare h3{ font-size:22px; margin-bottom:22px; font-weight:700; }
+  table.api-table{ width:100%; border-collapse:collapse; font-size:14.6px; margin-bottom:22px; }
+  table.api-table th{
+    text-align:left; font-weight:600; font-size:13px; letter-spacing:.03em;
+    color:rgba(255,255,255,.55); padding:0 14px 12px; border-bottom:1px solid rgba(255,255,255,.3);
+  }
+  table.api-table td{ padding:15px 14px; vertical-align:top; border-bottom:1px solid rgba(255,255,255,.12); color:rgba(255,255,255,.85); }
+  table.api-table td.dim{ font-weight:700; color:var(--white); white-space:nowrap; }
+  table.api-table th.ds{ color:var(--brass-light); }
+  table.api-table th.db{ color:#8FC2C9; }
+  .api-note{ font-size:14.2px; color:rgba(255,255,255,.62); font-style:italic; line-height:1.6; border-top:1px dashed rgba(255,255,255,.2); padding-top:18px; }
+
   /* ---------- 阶段 table ---------- */
   .stage-table{ width:100%; border-collapse:collapse; font-size:16px; }
   .stage-table th{
@@ -359,6 +391,8 @@
     .hero-grid{ grid-template-columns:1fr; }
     .hero h1{ font-size:38px; }
     .twocol{ grid-template-columns:1fr; }
+    .api-cols{ grid-template-columns:1fr; }
+    table.api-table{ font-size:12.5px; }
     .pain-grid{ grid-template-columns:1fr; }
     .scenario-grid{ grid-template-columns:1fr; }
     .tool-grid{ grid-template-columns:repeat(2,1fr); }
@@ -386,6 +420,7 @@
       <a href="#pain">痛点</a>
       <a href="#scenarios">应用场景</a>
       <a href="#tools">工具选型</a>
+      <a href="#api">API进阶方案</a>
       <a href="#path">实施路径</a>
       <a href="#risk">风险提示</a>
     </div>
@@ -510,6 +545,45 @@
       <p>四类工具各司其职，WPS 作为最终资料落地与存档的载体。</p>
     </div>
     <div class="tool-grid" id="tool-grid"></div>
+  </div>
+</section>
+
+<section class="dark" id="api">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">六 · 进阶方案</div>
+        <h2>接入 API：从"手动搬运"到"自动运行"</h2>
+      </div>
+      <p>现在的用法仍需要员工每一步手动操作，接入 API 后 AI 可在后台自动运行。</p>
+    </div>
+
+    <div class="api-cols">
+      <div class="api-card">
+        <h4>现状</h4>
+        <p>目前用法本质是"人工打开网页对话框 → 手动复制粘贴内容 → 等待AI回复 → 再手动复制回表格/邮件"，AI 仍需要员工每一步手动操作。</p>
+        <p>接入 API 后（企业购买调用额度，接入 WPS / 邮箱 / 企业微信等系统），AI 可在后台自动运行，员工只需点一下按钮、上传文件，甚至无需操作，最后只做结果确认。</p>
+      </div>
+      <div class="api-card">
+        <h4>实施前提</h4>
+        <ul>
+          <li>需公司安排懂技术的人员（IT同事或外部服务商）把 API 接到具体的小工具里，属于一次性开发投入</li>
+          <li>开发完成后，员工使用方式与点开网页按钮相当简单，不需要写代码或接触 API Key</li>
+          <li>建议先挑 1-2 个高频场景做试点小工具，验证好用后再逐步扩展</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="api-compare">
+      <h3>DeepSeek API 与豆包（火山方舟）API 该怎么选</h3>
+      <table class="api-table">
+        <thead>
+          <tr><th>对比维度</th><th class="ds">DeepSeek API</th><th class="db">豆包 / 火山方舟 API</th></tr>
+        </thead>
+        <tbody id="api-table-body"></tbody>
+      </table>
+      <p class="api-note">建议：涉及图片场景（样衣照片处理、纸质单据OCR）优先豆包/火山方舟；知识库问答优先豆包；纯文本强逻辑核算（报价核价、多表交叉校验）优先 DeepSeek；其余文本类场景（邮件摘要、翻译、交期预警、生产周报）两者能力接近，可先各选一个小范围试用后再定，不必只选一个全部替换。</p>
+    </div>
   </div>
 </section>
 
@@ -705,6 +779,14 @@ const tools = [
   ["W","WPS","基础办公工具","表格制作、公式计算、PPT排版、文档管理，最终资料落地载体"],
 ];
 
+const apiCompare = [
+  ["模型能力定位","文本推理与复杂逻辑能力强，擅长多表交叉核算、严谨的数字校验","中文表达和商务语气更贴近国内办公习惯"],
+  ["图片 / OCR 处理","以文本为主，处理图片需额外调用其他产品","原生支持图像理解和文字识别，一套接口同时处理文字和图片"],
+  ["企业知识库（RAG）","无现成知识库产品，需自建向量数据库","自带“私域知识库搜索”功能，配置相对简单"],
+  ["开源 / 私有化部署","模型权重开源，具备本地私有化部署可能","闭源模型，只能通过火山引擎云端调用"],
+  ["调用成本","以极致低价著称，复杂推理任务性价比高","价格同样有竞争力，具体以实际用量测算为准"],
+];
+
 const timelineData = [
   ["01","试点","约 1 个月","选取 1-2 名业务员、跟单员，先在“邮件摘要”“报价单核对”“样衣视觉资料生成PPT”三个场景试用，收集使用反馈"],
   ["02","推广","约 2-3 个月","将试点验证有效的场景固化为标准操作模板（SOP + 固定提示词模板），在业务一部全员推广"],
@@ -760,6 +842,10 @@ document.getElementById("tool-grid").innerHTML = tools.map((t,i)=>`
   <div class="tool-card" id="tool-${i}"><div class="glyph">${t[0]}</div><h4>${t[1]}</h4><div class="pos">${t[2]}</div><p>${t[3]}</p></div>
 `).join("");
 
+document.getElementById("api-table-body").innerHTML = apiCompare.map((r,i)=>`
+  <tr id="api-${i}"><td class="dim">${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td></tr>
+`).join("");
+
 document.getElementById("timeline").innerHTML = timelineData.map((t,i)=>`
   <div class="tl-stage" id="tl-${i}"><div class="dot">${t[0]}</div><h4>${t[1]}</h4><div class="when">${t[2]}</div><p>${t[3]}</p></div>
 `).join("");
@@ -803,6 +889,7 @@ stages.forEach((s,i)=> searchIndex.push({title:s[0], tag:"工作阶段", id:`sta
 pains.forEach((p,i)=> searchIndex.push({title:p[0], tag:"痛点", id:`pain-${i}`, kw:p[0]+p[1]}));
 scenarios.forEach(s=> searchIndex.push({title:`场景${s.no}｜${s.title}`, tag:s.role, id:`scenario-${s.no}`, kw:s.title+s.tool+s.scope+s.effect+s.role}));
 tools.forEach((t,i)=> searchIndex.push({title:t[1], tag:"工具", id:`tool-${i}`, kw:t[1]+t[2]+t[3]}));
+apiCompare.forEach((r,i)=> searchIndex.push({title:`API对比｜${r[0]}`, tag:"进阶方案", id:`api-${i}`, kw:r[0]+r[1]+r[2]+"DeepSeek豆包火山方舟API接入"}));
 timelineData.forEach((t,i)=> searchIndex.push({title:`阶段${t[0]}｜${t[1]}`, tag:"实施路径", id:`tl-${i}`, kw:t[1]+t[2]+t[3]}));
 benefits.forEach((b,i)=> searchIndex.push({title:b[1], tag:"预期效益", id:`benefit-${i}`, kw:b[1]+b[2]}));
 risks.forEach((r,i)=> searchIndex.push({title:r[0], tag:"数据安全", id:`risk-${i}`, kw:r[0]+r[1]+r[2]}));
