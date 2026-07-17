@@ -209,6 +209,25 @@
     flex-shrink:0; margin-top:8px;
   }
   .api-compare h3{ font-size:22px; margin-bottom:22px; font-weight:700; }
+  .api-scenario-block{ margin-bottom:56px; }
+  .api-scenario-block h3{ font-size:22px; margin-bottom:10px; font-weight:700; }
+  .api-scenario-hint{ font-size:14.6px; color:rgba(255,255,255,.6); margin-bottom:26px; max-width:760px; line-height:1.6; }
+  .api-scenario-table{ border:1px solid rgba(255,255,255,.14); border-radius:6px; overflow:hidden; }
+  .api-scenario-head{
+    display:grid; grid-template-columns:1.1fr 1.5fr 1.5fr; gap:0;
+    background:rgba(255,255,255,.08); padding:14px 20px; font-size:12.5px;
+    letter-spacing:.03em; text-transform:uppercase; color:rgba(255,255,255,.5); font-weight:600;
+  }
+  .api-scenario-row{
+    display:grid; grid-template-columns:1.1fr 1.5fr 1.5fr; gap:0; padding:18px 20px;
+    border-top:1px solid rgba(255,255,255,.1); align-items:start;
+  }
+  .api-scenario-row .sc-title{ font-size:14.8px; font-weight:700; color:var(--white); display:flex; gap:10px; align-items:baseline; padding-right:14px; }
+  .api-scenario-row .sc-no{ font-family:"Spectral",serif; color:var(--brass-light); font-size:15px; flex-shrink:0; }
+  .api-scenario-row .sc-now{ font-size:13.6px; color:rgba(255,255,255,.55); line-height:1.55; padding-right:16px; position:relative; }
+  .api-scenario-row .sc-now::before{ content:"现在　"; color:rgba(255,255,255,.35); font-size:11.5px; display:block; margin-bottom:4px; font-weight:600; letter-spacing:.03em; }
+  .api-scenario-row .sc-after{ font-size:13.8px; color:rgba(255,255,255,.9); line-height:1.55; }
+  .api-scenario-row .sc-after::before{ content:"API化后　"; color:var(--brass-light); font-size:11.5px; display:block; margin-bottom:4px; font-weight:600; letter-spacing:.03em; }
   table.api-table{ width:100%; border-collapse:collapse; font-size:14.6px; margin-bottom:22px; }
   table.api-table th{
     text-align:left; font-weight:600; font-size:13px; letter-spacing:.03em;
@@ -392,6 +411,9 @@
     .hero h1{ font-size:38px; }
     .twocol{ grid-template-columns:1fr; }
     .api-cols{ grid-template-columns:1fr; }
+    .api-scenario-head{ display:none; }
+    .api-scenario-row{ grid-template-columns:1fr; gap:10px; }
+    .api-scenario-row .sc-now, .api-scenario-row .sc-after{ padding-right:0; }
     table.api-table{ font-size:12.5px; }
     .pain-grid{ grid-template-columns:1fr; }
     .scenario-grid{ grid-template-columns:1fr; }
@@ -571,6 +593,17 @@
           <li>开发完成后，员工使用方式与点开网页按钮相当简单，不需要写代码或接触 API Key</li>
           <li>建议先挑 1-2 个高频场景做试点小工具，验证好用后再逐步扩展</li>
         </ul>
+      </div>
+    </div>
+
+    <div class="api-scenario-block">
+      <h3>9 个场景接入 API 后，会有什么变化</h3>
+      <p class="api-scenario-hint">同样是这 9 个场景，现在靠人工打开对话框操作；接入 API 之后，多数环节可以自动触发，人只需要最后确认结果。</p>
+      <div class="api-scenario-table">
+        <div class="api-scenario-head">
+          <span>场景</span><span>现在（人工触发AI）</span><span>接入API后（自动运行）</span>
+        </div>
+        <div id="api-scenario-rows"></div>
       </div>
     </div>
 
@@ -772,6 +805,18 @@ const scenarios = [
    ]},
 ];
 
+const apiScenarioEffects = [
+  {no:1, title:"邮件智能摘要与信息提取", now:"每封邮件都要手动复制粘贴进对话框，再手动把结果抄回《订单跟踪表》", after:"新邮件到达即自动摘要提取，结果直接写入《订单跟踪表》对应行；数量变化超阈值自动标红并提醒相关人，业务员只需最后扫一眼确认"},
+  {no:2, title:"报价单智能整理与核价辅助", now:"供应商每回一封报价，就要手动整理一次、粘贴问一次AI", after:"供应商报价一有更新自动汇总成对比表；报价单定稿前系统自动比对“报客户价”与“实际价”，一旦价格倒挂直接锁定禁止发送，不用等人工发现"},
+  {no:3, title:"大货订单数量表 / 备料表自动生成", now:"PO确认后手动整理数量、面料单耗，粘贴给AI再复制回表格", after:"PO在ERP确认的瞬间，系统自动取数生成数量表/备料表草稿，并按名单自动分发邮件，业务员只需核对定稿"},
+  {no:4, title:"多语言资料翻译与工艺单互译", now:"工艺单、CFA逐条复制粘贴翻译，术语靠人工对照表", after:"文档上传后整篇自动翻译，术语库自动统一对照，直接生成中外对照双语版本，减少逐条操作"},
+  {no:5, title:"交期与时限预警清单", now:"业务员每天早上手动整理一遍在跟订单的节点信息", after:"系统每天自动扫描全部在跟订单节点，按紧急程度自动生成预警清单，主动推送到企业微信/邮箱，不用人工每天整理"},
+  {no:6, title:"样衣视觉资料生成与客户PPT汇报", now:"照片手动上传处理，产品信息手动整理粘贴生成PPT大纲", after:"样衣照片上传后自动完成平铺图/上身图/多角度图生成，并自动套入PPT模板产出初稿，业务员只需微调定稿"},
+  {no:7, title:"生产进度自动汇总", now:"纸质记录拍照转文字，再手动整理粘贴生成周报", after:"车间数据录入系统后自动流转生成生产进度周报，异常项自动高亮，定时自动发送给相关人员"},
+  {no:8, title:"工艺核对智能辅助", now:"工艺单文字手动粘贴给AI逐项核对", after:"工艺单提交系统后自动核对完整性，缺失或表述不清的项自动标记并退回业务补充，跟单员无需手动操作"},
+  {no:9, title:"流程与模板知识库问答", now:"需要单独打开AI网页，粘贴问题才能得到答案", after:"知识库问答机器人直接接入企业微信/OA，员工在工作群里@机器人提问即可即时获得答案，无需切换应用"},
+];
+
 const tools = [
   ["DS","DeepSeek","文本类主力工具","邮件信息提取、翻译、报价核对、表格数据整理、工艺核对、知识问答"],
   ["豆","豆包","图文办公辅助工具","图片文字识别、内容生成、辅助起草文案、PPT大纲生成"],
@@ -846,6 +891,14 @@ document.getElementById("api-table-body").innerHTML = apiCompare.map((r,i)=>`
   <tr id="api-${i}"><td class="dim">${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td></tr>
 `).join("");
 
+document.getElementById("api-scenario-rows").innerHTML = apiScenarioEffects.map(e=>`
+  <div class="api-scenario-row" id="api-sc-${e.no}">
+    <div class="sc-title"><span class="sc-no">${String(e.no).padStart(2,'0')}</span>${e.title}</div>
+    <div class="sc-now">${e.now}</div>
+    <div class="sc-after">${e.after}</div>
+  </div>
+`).join("");
+
 document.getElementById("timeline").innerHTML = timelineData.map((t,i)=>`
   <div class="tl-stage" id="tl-${i}"><div class="dot">${t[0]}</div><h4>${t[1]}</h4><div class="when">${t[2]}</div><p>${t[3]}</p></div>
 `).join("");
@@ -890,6 +943,7 @@ pains.forEach((p,i)=> searchIndex.push({title:p[0], tag:"痛点", id:`pain-${i}`
 scenarios.forEach(s=> searchIndex.push({title:`场景${s.no}｜${s.title}`, tag:s.role, id:`scenario-${s.no}`, kw:s.title+s.tool+s.scope+s.effect+s.role}));
 tools.forEach((t,i)=> searchIndex.push({title:t[1], tag:"工具", id:`tool-${i}`, kw:t[1]+t[2]+t[3]}));
 apiCompare.forEach((r,i)=> searchIndex.push({title:`API对比｜${r[0]}`, tag:"进阶方案", id:`api-${i}`, kw:r[0]+r[1]+r[2]+"DeepSeek豆包火山方舟API接入"}));
+apiScenarioEffects.forEach(e=> searchIndex.push({title:`场景${e.no}接入API后｜${e.title}`, tag:"进阶方案", id:`api-sc-${e.no}`, kw:e.title+e.now+e.after+"API自动化"}));
 timelineData.forEach((t,i)=> searchIndex.push({title:`阶段${t[0]}｜${t[1]}`, tag:"实施路径", id:`tl-${i}`, kw:t[1]+t[2]+t[3]}));
 benefits.forEach((b,i)=> searchIndex.push({title:b[1], tag:"预期效益", id:`benefit-${i}`, kw:b[1]+b[2]}));
 risks.forEach((r,i)=> searchIndex.push({title:r[0], tag:"数据安全", id:`risk-${i}`, kw:r[0]+r[1]+r[2]}));
