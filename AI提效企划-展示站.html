@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>业务员 / 跟单员岗位 · AI 提效应用企划</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=Spectral:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#161B33;
+    --ink-2:#232B52;
+    --canvas:#EFEFEA;
+    --canvas-2:#E4E3DB;
+    --paper:#FAFAF6;
+    --brass:#C08A2E;
+    --brass-light:#E4B563;
+    --thread-red:#A6452F;
+    --ink-70: rgba(22,27,51,.7);
+    --ink-45: rgba(22,27,51,.45);
+    --line: rgba(22,27,51,.12);
+    --white:#fff;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--canvas);
+    color:var(--ink);
+    font-family:"Inter","PingFang SC","Microsoft YaHei",sans-serif;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  ::selection{background:var(--brass); color:var(--white);}
+  h1,h2,h3,.serif{ font-family:"Noto Serif SC","Spectral",serif; }
+  .eyebrow{
+    font-family:"Spectral", serif;
+    font-style:italic;
+    font-size:15.3px;
+    letter-spacing:.08em;
+    color:var(--brass);
+    display:flex; align-items:center; gap:10px;
+    margin-bottom:14px;
+  }
+  .eyebrow::before{
+    content:"";
+    width:28px; height:1px;
+    background:var(--brass);
+    display:inline-block;
+  }
+  .wrap{ max-width:1180px; margin:0 auto; padding:0 32px; }
+  a{color:inherit;}
+
+  /* ---------- stitch motif ---------- */
+  .stitch{
+    height:1px;
+    background-image: linear-gradient(90deg, currentColor 0 8px, transparent 8px 16px);
+    background-size:16px 1px;
+    color: var(--line);
+    width:100%;
+  }
+  .stitch.dark{ color: rgba(255,255,255,.18); }
+  .stitch.brass{ color: var(--brass); opacity:.5; }
+
+  /* ---------- nav ---------- */
+  nav{
+    position:sticky; top:0; z-index:40;
+    background:rgba(239,239,234,.86);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  nav .wrap{ display:flex; align-items:center; justify-content:space-between; height:64px; }
+  .brand{ display:flex; align-items:center; gap:10px; font-weight:700; font-size:17.7px; letter-spacing:.02em;}
+  .brand .mark{
+    width:10px; height:10px; border-radius:2px;
+    background:var(--brass); transform:rotate(45deg);
+    flex-shrink:0;
+  }
+  .navlinks{ display:flex; gap:28px; font-size:15.9px; color:var(--ink-70); }
+  .navlinks a{ text-decoration:none; transition:color .2s; }
+  .navlinks a:hover{ color:var(--brass); }
+  .navlinks a.active{color: var(--ink); font-weight:600;}
+  .fontctrl{ display:flex; align-items:center; gap:8px; }
+  .fontctrl-lbl{ font-size:12.5px; color:var(--ink-45); margin-right:2px; }
+  .fontctrl button{
+    width:34px; height:34px; border-radius:50%; border:1px solid var(--ink);
+    background:var(--white); color:var(--ink); font-family:"Spectral",serif; font-weight:600;
+    font-size:14px; cursor:pointer; transition:.15s;
+  }
+  .fontctrl button:hover{ background:var(--ink); color:var(--brass-light); }
+
+  /* ---------- finder ---------- */
+  #finder{ padding:52px 0 12px; }
+  .finder-box{
+    background:var(--ink); color:var(--white); border-radius:6px;
+    padding:38px 40px 30px; position:relative; overflow:visible;
+  }
+  .finder-lbl{ font-family:"Spectral",serif; font-style:italic; color:var(--brass-light); font-size:14px; margin-bottom:8px; }
+  .finder-box h2{ font-size:28px; margin-bottom:10px; }
+  .finder-hint{ color:rgba(255,255,255,.6); font-size:15.5px; margin-bottom:22px; }
+  .finder-input-row{ display:flex; gap:12px; }
+  #finder-input{
+    flex:1; font-size:20px; padding:16px 20px; border-radius:6px; border:2px solid rgba(255,255,255,.2);
+    background:rgba(255,255,255,.06); color:var(--white); font-family:inherit; outline:none;
+  }
+  #finder-input::placeholder{ color:rgba(255,255,255,.4); }
+  #finder-input:focus{ border-color:var(--brass-light); }
+  .finder-input-row button{
+    background:var(--brass); color:var(--ink); border:none; border-radius:6px; padding:0 34px;
+    font-size:18px; font-weight:700; cursor:pointer; font-family:inherit;
+  }
+  .finder-input-row button:hover{ background:var(--brass-light); }
+  .finder-results{ margin-top:16px; display:flex; flex-direction:column; gap:2px; }
+  .finder-item{
+    display:flex; align-items:center; justify-content:space-between; gap:16px;
+    background:rgba(255,255,255,.05); padding:15px 18px; border-radius:5px; cursor:pointer;
+    transition:.15s; border:1px solid transparent;
+  }
+  .finder-item:hover, .finder-item.sel{ background:rgba(255,255,255,.12); border-color:var(--brass-light); }
+  .finder-item .ft-title{ font-size:17px; font-weight:600; }
+  .finder-item .ft-tag{ font-size:12.5px; color:var(--brass-light); background:rgba(192,138,46,.18); padding:4px 10px; border-radius:100px; flex-shrink:0; }
+  .finder-empty{ color:rgba(255,255,255,.5); font-size:15px; padding:12px 4px; }
+
+  @keyframes jumpPulse{
+    0%{ box-shadow:0 0 0 0 rgba(192,138,46,.55); }
+    70%{ box-shadow:0 0 0 18px rgba(192,138,46,0); }
+    100%{ box-shadow:0 0 0 0 rgba(192,138,46,0); }
+  }
+  .jump-highlight{ animation:jumpPulse 1.4s ease-out 2; border-radius:6px; }
+
+  /* ---------- hero ---------- */
+  header.hero{
+    background:var(--ink);
+    color:var(--white);
+    position:relative;
+    overflow:hidden;
+    padding:96px 0 84px;
+  }
+  header.hero::after{
+    content:"";
+    position:absolute; right:-140px; top:-160px;
+    width:520px; height:520px; border-radius:50%;
+    background:radial-gradient(circle at 30% 30%, rgba(192,138,46,.28), transparent 65%);
+  }
+  .hero-grid{ display:grid; grid-template-columns: 1.25fr .95fr; gap:56px; align-items:end; position:relative; }
+  .hero h1{
+    font-size:54px; line-height:1.18; font-weight:700; letter-spacing:-.01em;
+    margin:14px 0 22px;
+  }
+  .hero h1 em{ font-style:normal; color:var(--brass-light); }
+  .hero p.lede{
+    font-size:19.5px; color:rgba(255,255,255,.72); max-width:520px; margin-bottom:34px;
+  }
+  .hero-meta{ display:flex; gap:34px; flex-wrap:wrap; }
+  .hero-meta div{ min-width:120px; }
+  .hero-meta .num{ font-family:"Spectral",serif; font-size:32.4px; color:var(--brass-light); font-weight:600; }
+  .hero-meta .lbl{ font-size:14.2px; color:rgba(255,255,255,.55); margin-top:2px; }
+  .hero-card{
+    background:rgba(255,255,255,.05);
+    border:1px solid rgba(255,255,255,.14);
+    border-radius:4px;
+    padding:26px 26px 22px;
+  }
+  .hero-card h3{ font-size:16.5px; font-weight:600; color:var(--brass-light); margin-bottom:14px; letter-spacing:.02em;}
+  .hero-card ul{ list-style:none; }
+  .hero-card li{
+    display:flex; gap:10px; font-size:15.9px; color:rgba(255,255,255,.82);
+    padding:9px 0; border-top:1px solid rgba(255,255,255,.1);
+  }
+  .hero-card li:first-of-type{ border-top:none; }
+  .hero-card li b{ color:var(--white); font-weight:600; min-width:64px; }
+
+  /* ---------- section shell ---------- */
+  section{ padding:88px 0; }
+  section.alt{ background:var(--paper); border-top:1px solid var(--line); border-bottom:1px solid var(--line);}
+  .section-head{ display:flex; justify-content:space-between; align-items:flex-end; gap:24px; margin-bottom:44px; flex-wrap:wrap;}
+  .section-head h2{ font-size:34px; font-weight:700; max-width:640px; }
+  .section-head p{ color:var(--ink-70); max-width:360px; font-size:17.1px; padding-bottom:4px;}
+
+  /* ---------- 背景 two col ---------- */
+  .twocol{ display:grid; grid-template-columns:1fr 1fr; gap:48px; }
+  .twocol h4{ font-size:18.9px; margin-bottom:16px; font-weight:700;}
+  .twocol ul{ list-style:none; }
+  .twocol li{ font-size:17.1px; color:var(--ink-70); padding:11px 0 11px 22px; position:relative; border-top:1px solid var(--line); }
+  .twocol li:first-of-type{border-top:none;}
+  .twocol li::before{ content:"—"; position:absolute; left:0; color:var(--brass); font-weight:700; }
+  .goal-box{ background:var(--ink); color:var(--white); padding:32px; border-radius:4px; }
+  .goal-box h4{ color:var(--brass-light); }
+  .goal-box li{ color:rgba(255,255,255,.85); border-top:1px solid rgba(255,255,255,.12); }
+  .goal-box li::before{ color:var(--brass-light); }
+
+  /* ---------- 阶段 table ---------- */
+  .stage-table{ width:100%; border-collapse:collapse; font-size:16px; }
+  .stage-table th{
+    text-align:left; font-weight:600; font-size:13.6px; letter-spacing:.04em; text-transform:uppercase;
+    color:var(--ink-45); padding:0 14px 12px; border-bottom:1px solid var(--ink);
+  }
+  .stage-table td{ padding:16px 14px; vertical-align:top; border-bottom:1px solid var(--line); }
+  .stage-table tr:hover td{ background:rgba(192,138,46,.06); }
+  .stage-table td.name{ font-weight:700; white-space:nowrap; color:var(--ink); }
+  .stage-table td.note{ color:var(--ink-45); font-size:15.1px; }
+
+  /* ---------- pain grid ---------- */
+  .pain-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--line); border:1px solid var(--line); }
+  .pain{ background:var(--canvas); padding:28px 26px; }
+  section.alt .pain{ background:var(--paper); }
+  .pain .idx{ font-family:"Spectral",serif; font-size:15.3px; color:var(--brass); margin-bottom:10px;}
+  .pain h4{ font-size:19.5px; margin-bottom:10px; font-weight:700;}
+  .pain p{ font-size:15.7px; color:var(--ink-70); }
+
+  /* ---------- scenario tabs ---------- */
+  .tabs{ display:flex; gap:8px; margin-bottom:30px; }
+  .tab-btn{
+    border:1px solid var(--ink); background:transparent; color:var(--ink);
+    padding:9px 18px; font-size:15.9px; font-weight:600; cursor:pointer;
+    border-radius:100px; transition:all .15s; font-family:inherit;
+  }
+  .tab-btn.active{ background:var(--ink); color:var(--white); }
+  .scenario-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:18px; }
+  .scenario{
+    background:var(--paper); border:1px solid var(--line); border-radius:4px; padding:24px;
+    display:flex; flex-direction:column; gap:12px; transition:border-color .2s, transform .2s, box-shadow .2s;
+    cursor:pointer;
+  }
+  section:not(.alt) .scenario{ background:var(--white); }
+  .scenario:hover{ border-color:var(--brass); transform:translateY(-2px); box-shadow:0 14px 30px rgba(22,27,51,.1); }
+  .scenario:focus{ outline:2px solid var(--brass); outline-offset:2px; }
+  .scenario .top{ display:flex; justify-content:space-between; align-items:flex-start; }
+  .scenario .no{ font-family:"Spectral",serif; font-size:23.8px; color:var(--brass); font-weight:600; }
+  .scenario .tag{ font-size:12.4px; padding:3px 9px; border-radius:100px; background:var(--canvas-2); color:var(--ink-70); font-weight:600;}
+  .scenario h4{ font-size:18.9px; font-weight:700; line-height:1.4; }
+  .scenario .tool{ font-size:14.2px; color:var(--brass); font-weight:600;}
+  .scenario p{ font-size:15.3px; color:var(--ink-70); flex:1; }
+  .scenario .effect{ font-size:14.2px; color:var(--ink-45); border-top:1px dashed var(--line); padding-top:10px; }
+  .scenario .effect b{ color:var(--ink); font-weight:600; }
+  .scenario .viewmore{ font-size:14px; color:var(--brass); font-weight:600; margin-top:2px; }
+
+  /* ---------- scenario detail modal ---------- */
+  #scenario-modal-overlay{
+    position:fixed; inset:0; z-index:200; background:rgba(22,27,51,.55);
+    display:flex; align-items:center; justify-content:center; padding:24px;
+    opacity:0; pointer-events:none; transition:opacity .22s;
+  }
+  #scenario-modal-overlay.open{ opacity:1; pointer-events:auto; }
+  #scenario-modal{
+    background:var(--white); width:640px; max-width:100%; max-height:86vh;
+    border-radius:8px; overflow:hidden; display:flex; flex-direction:column;
+    position:relative; transform:translateY(18px) scale(.98); transition:transform .24s;
+    box-shadow:0 30px 80px rgba(0,0,0,.35);
+  }
+  #scenario-modal-overlay.open #scenario-modal{ transform:translateY(0) scale(1); }
+  .modal-close{
+    position:absolute; top:18px; right:22px; background:none; border:none; color:var(--white);
+    font-size:32px; line-height:1; cursor:pointer; z-index:2;
+  }
+  .modal-head{ background:var(--ink); color:var(--white); padding:30px 32px 24px; position:relative; }
+  .modal-topline{ display:flex; align-items:center; gap:12px; margin-bottom:10px; }
+  .modal-no{ font-family:"Spectral",serif; font-size:28px; color:var(--brass-light); font-weight:600; }
+  .modal-tag{ font-size:13px; padding:4px 11px; border-radius:100px; background:rgba(255,255,255,.14); color:var(--white); font-weight:600; }
+  .modal-head h3{ font-size:27px; margin-bottom:18px; line-height:1.4; }
+  .modal-meta{ display:flex; flex-direction:column; gap:6px; }
+  .modal-meta div{ font-size:15px; color:rgba(255,255,255,.85); }
+  .modal-meta .ml{ color:var(--brass-light); font-weight:600; margin-right:10px; }
+  .modal-body{ padding:26px 32px 32px; overflow-y:auto; }
+  .modal-steps-lbl{ font-size:13px; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-45); font-weight:700; margin-bottom:14px; }
+  #modal-steps{ list-style:none; counter-reset:step; display:flex; flex-direction:column; gap:16px; margin-bottom:26px; }
+  #modal-steps li{ counter-increment:step; display:flex; gap:14px; font-size:16px; color:var(--ink); line-height:1.65; }
+  #modal-steps li::before{
+    content:counter(step); flex-shrink:0; width:27px; height:27px; border-radius:50%;
+    background:var(--ink); color:var(--brass-light); font-family:"Spectral",serif; font-weight:600; font-size:13.5px;
+    display:flex; align-items:center; justify-content:center; margin-top:1px;
+  }
+  .modal-effect{ background:var(--canvas); border-radius:6px; padding:18px 20px; }
+  .modal-effect p{ font-size:15.5px; color:var(--ink-70); }
+
+  /* ---------- tools ---------- */
+  .tool-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:18px; }
+  .tool-card{ border:1px solid var(--line); border-radius:4px; padding:22px; background:var(--paper); }
+  .tool-card .glyph{ width:38px; height:38px; border-radius:3px; background:var(--ink); color:var(--brass-light); display:flex; align-items:center; justify-content:center; font-family:"Spectral",serif; font-weight:600; font-size:17.7px; margin-bottom:16px;}
+  .tool-card h4{ font-size:17.7px; margin-bottom:6px; }
+  .tool-card .pos{ font-size:13.6px; color:var(--brass); font-weight:600; margin-bottom:12px;}
+  .tool-card p{ font-size:14.8px; color:var(--ink-70); }
+
+  /* ---------- timeline ---------- */
+  .timeline{ display:grid; grid-template-columns:repeat(3,1fr); gap:0; position:relative; }
+  .tl-stage{ padding:0 26px 0 0; position:relative; }
+  .tl-stage:not(:last-child)::after{
+    content:""; position:absolute; top:11px; right:-1px; width:100%; height:1px;
+    background-image: linear-gradient(90deg, var(--brass) 0 8px, transparent 8px 16px);
+    background-size:16px 1px;
+  }
+  .tl-stage .dot{ width:22px; height:22px; border-radius:50%; background:var(--ink); color:var(--brass-light); font-family:"Spectral",serif; font-size:13px; display:flex; align-items:center; justify-content:center; margin-bottom:20px; font-weight:600; position:relative; z-index:1;}
+  .tl-stage h4{ font-size:22.4px; margin-bottom:6px; }
+  .tl-stage .when{ font-size:14.2px; color:var(--brass); font-style:italic; font-family:"Spectral",serif; margin-bottom:16px;}
+  .tl-stage p{ font-size:15.7px; color:var(--ink-70); }
+
+  /* ---------- benefits ---------- */
+  .benefit-row{ display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--line); border:1px solid var(--line);}
+  .benefit{ background:var(--ink); color:var(--white); padding:30px 22px; }
+  .benefit .num{ font-family:"Spectral",serif; font-size:28.1px; color:var(--brass-light); margin-bottom:14px; }
+  .benefit h4{ font-size:17.1px; margin-bottom:8px; font-weight:700;}
+  .benefit p{ font-size:14.2px; color:rgba(255,255,255,.65); }
+
+  /* ---------- risk ---------- */
+  .risk-banner{ background:#F4E9E4; border:1px solid rgba(166,69,47,.3); border-radius:4px; padding:20px 24px; font-size:16.5px; color:var(--thread-red); font-weight:600; margin-bottom:32px; }
+  .risk-table{ width:100%; border-collapse:collapse; font-size:15.3px; }
+  .risk-table th{ text-align:left; font-size:13px; text-transform:uppercase; letter-spacing:.04em; color:var(--ink-45); padding:0 12px 10px; border-bottom:1px solid var(--ink); }
+  .risk-table td{ padding:14px 12px; border-bottom:1px solid var(--line); vertical-align:top; color:var(--ink-70);}
+  .risk-table td.type{ font-weight:700; color:var(--ink); }
+  .level{ display:inline-block; padding:2px 10px; border-radius:100px; font-size:13px; font-weight:700; }
+  .level.mid{ background:#E7E0CB; color:#7A5C10; }
+  .level.high{ background:#F0DAC7; color:#8A4A15; }
+  .level.extreme{ background:#F1D6D0; color:var(--thread-red); }
+
+  footer{ background:var(--ink); color:rgba(255,255,255,.5); padding:40px 0; font-size:14.8px; }
+  footer .wrap{ display:flex; justify-content:space-between; align-items:center; }
+
+  /* ---------- chat widget ---------- */
+  #chat-fab{
+    position:fixed; right:28px; bottom:28px; z-index:100;
+    width:60px; height:60px; border-radius:50%;
+    background:var(--ink); color:var(--brass-light);
+    border:1px solid rgba(255,255,255,.15);
+    display:flex; align-items:center; justify-content:center;
+    cursor:pointer; box-shadow:0 10px 30px rgba(22,27,51,.35);
+    font-family:"Spectral",serif; font-size:13px; text-align:center; line-height:1.2;
+    transition:transform .2s;
+  }
+  #chat-fab:hover{ transform:scale(1.06); }
+  #chat-panel{
+    position:fixed; right:28px; bottom:104px; z-index:100;
+    width:400px; max-width:calc(100vw - 40px); height:560px; max-height:70vh;
+    background:var(--white); border:1px solid var(--line); border-radius:8px;
+    box-shadow:0 24px 60px rgba(22,27,51,.28);
+    display:flex; flex-direction:column; overflow:hidden;
+    opacity:0; pointer-events:none; transform:translateY(16px);
+    transition:opacity .22s, transform .22s;
+  }
+  #chat-panel.open{ opacity:1; pointer-events:auto; transform:translateY(0); }
+  .chat-head{ background:var(--ink); color:var(--white); padding:18px 20px; }
+  .chat-head .eyebrow{ color:var(--brass-light); margin-bottom:4px;}
+  .chat-head .eyebrow::before{ background:var(--brass-light); }
+  .chat-head h4{ font-size:18.9px; font-family:"Noto Serif SC",serif; }
+  .chat-head p{ font-size:13.6px; color:rgba(255,255,255,.55); margin-top:4px;}
+  .chat-body{ flex:1; overflow-y:auto; padding:18px 20px; display:flex; flex-direction:column; gap:14px; background:var(--paper); }
+  .msg{ font-size:15.7px; line-height:1.55; max-width:88%; padding:10px 13px; border-radius:6px; }
+  .msg.bot{ background:var(--white); border:1px solid var(--line); align-self:flex-start; color:var(--ink); }
+  .msg.user{ background:var(--ink); color:var(--white); align-self:flex-end; }
+  .msg.typing{ color:var(--ink-45); font-style:italic; }
+  .chat-suggest{ display:flex; flex-wrap:wrap; gap:6px; padding:0 20px 12px; background:var(--paper); }
+  .chip{ font-size:13.6px; border:1px solid var(--line); background:var(--white); padding:6px 11px; border-radius:100px; cursor:pointer; color:var(--ink-70); transition:.15s;}
+  .chip:hover{ border-color:var(--brass); color:var(--brass); }
+  .chat-input{ display:flex; gap:8px; padding:14px; border-top:1px solid var(--line); background:var(--white); }
+  .chat-input input{ flex:1; border:1px solid var(--line); border-radius:100px; padding:10px 16px; font-size:15.3px; font-family:inherit; outline:none; }
+  .chat-input input:focus{ border-color:var(--brass); }
+  .chat-input button{ background:var(--ink); color:var(--brass-light); border:none; width:40px; height:40px; border-radius:50%; cursor:pointer; flex-shrink:0; font-size:17.7px; }
+  .chat-input button:disabled{ opacity:.4; cursor:default; }
+
+  @media(max-width:920px){
+    .hero-grid{ grid-template-columns:1fr; }
+    .hero h1{ font-size:38px; }
+    .twocol{ grid-template-columns:1fr; }
+    .pain-grid{ grid-template-columns:1fr; }
+    .scenario-grid{ grid-template-columns:1fr; }
+    .tool-grid{ grid-template-columns:repeat(2,1fr); }
+    .timeline{ grid-template-columns:1fr; gap:28px;}
+    .tl-stage::after{ display:none; }
+    .benefit-row{ grid-template-columns:1fr 1fr; }
+    .navlinks{ display:none; }
+    .fontctrl-lbl{ display:none; }
+    .finder-box{ padding:28px 20px 24px; }
+    .finder-input-row{ flex-direction:column; }
+    .finder-input-row button{ padding:14px; }
+    #finder-input{ font-size:17px; }
+    #chat-panel{ right:16px; left:16px; width:auto; bottom:96px; }
+    #chat-fab{ right:20px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <div class="brand"><span class="mark"></span>迪尚华盛 · AI 提效企划</div>
+    <div class="navlinks">
+      <a href="#bg">背景目标</a>
+      <a href="#pain">痛点</a>
+      <a href="#scenarios">应用场景</a>
+      <a href="#tools">工具选型</a>
+      <a href="#path">实施路径</a>
+      <a href="#risk">风险提示</a>
+    </div>
+    <div class="fontctrl">
+      <span class="fontctrl-lbl">文字大小</span>
+      <button onclick="changeFontSize(-1)" aria-label="缩小文字">A-</button>
+      <button onclick="changeFontSize(1)" aria-label="放大文字">A+</button>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="eyebrow" style="color:var(--brass-light);">业务员 / 跟单员岗位</div>
+      <h1>把重复劳动交给 AI，<br>把判断力留给<em>人</em>。</h1>
+      <p class="lede">基于《事业部业务一部订单操作流程》梳理。在不改变现有 WPS + 邮箱办公习惯的前提下，用 9 个可落地场景，帮业务员和跟单员从邮件摘抄、表格制作、翻译起草中解放出来。</p>
+      <div class="hero-meta">
+        <div><div class="num">6</div><div class="lbl">核心工作阶段</div></div>
+        <div><div class="num">9</div><div class="lbl">AI 应用场景</div></div>
+        <div><div class="num">3</div><div class="lbl">实施阶段</div></div>
+        <div><div class="num">04</div><div class="lbl">敏感数据分级</div></div>
+      </div>
+    </div>
+    <div class="hero-card">
+      <h3>企划要点</h3>
+      <ul>
+        <li><b>基础工具</b><span>WPS、企业邮箱</span></li>
+        <li><b>AI 工具</b><span>DeepSeek、豆包、迪尚AI平台（视觉商拍）</span></li>
+        <li><b>定位</b><span>AI 负责辅助，人工负责复核与决策</span></li>
+        <li><b>制定人</b><span>孙思晗</span></li>
+      </ul>
+    </div>
+  </div>
+</header>
+
+<section id="finder">
+  <div class="wrap">
+    <div class="finder-box">
+      <div class="finder-lbl">想找什么，直接打字</div>
+      <h2>快速查找</h2>
+      <p class="finder-hint">输入关键词，比如"报价单"、"翻译"、"数据安全"，点结果自动跳到对应位置</p>
+      <div class="finder-input-row">
+        <input id="finder-input" type="text" placeholder="输入关键词，例如：报价单 / 翻译 / 数据安全 / DeepSeek" autocomplete="off" oninput="onFinderInput()" onkeydown="onFinderKeydown(event)"/>
+        <button onclick="finderJumpFirst()">跳转</button>
+      </div>
+      <div id="finder-results" class="finder-results"></div>
+    </div>
+  </div>
+</section>
+
+<section id="bg">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>转型关键期，<br>为什么现在需要 AI 提效</h2>
+      <p>迪尚华盛正由 OEM 向 ODM 转型，业务量与文档量持续增加，人工处理的边界正在被打破。</p>
+    </div>
+    <div class="twocol">
+      <div>
+        <h4>现状背景</h4>
+        <ul>
+          <li>业务量与客户对接文档量持续增加，跨部门协同愈发频繁</li>
+          <li>日常工作高度依赖邮件往来和 WPS / Excel 表格整理</li>
+          <li>涉及订单确认、面辅料准备、报价核价、生产跟单、包装发货、结汇对账等十余个环节</li>
+          <li>信息量大、节点多，容易因人工疏漏影响交期与品质</li>
+        </ul>
+      </div>
+      <div class="goal-box">
+        <h4>企划目标</h4>
+        <ul>
+          <li>把业务员 / 跟单员从重复性信息整理、表格制作、翻译起草中解放出来</li>
+          <li>把更多精力用于客户沟通、异常判断与经营决策</li>
+          <li>降低因信息遗漏导致的交期、品质风险</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="alt">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>六大工作阶段</h2>
+      <p>均以邮件沟通和 WPS 表格作为主要载体，贯穿一张订单的全生命周期。</p>
+    </div>
+    <table class="stage-table">
+      <thead><tr><th>工作阶段</th><th>主要动作</th><th>现用工具</th><th>工作特点</th></tr></thead>
+      <tbody id="stage-body"></tbody>
+    </table>
+  </div>
+</section>
+
+<section id="pain">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>当前主要痛点</h2>
+      <p>六类高频问题，共同制约着效率与准确度。</p>
+    </div>
+  </div>
+  <div class="wrap"><div class="pain-grid" id="pain-grid"></div></div>
+</section>
+
+<section class="alt" id="scenarios">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>9 大 AI 应用场景</h2>
+      <p>从“输入什么素材—如何操作—产出什么结果”完整写出，方便直接对照执行。</p>
+    </div>
+    <div class="tabs">
+      <button class="tab-btn active" data-f="all">全部 9 项</button>
+      <button class="tab-btn" data-f="业务员">面向业务员 · 6</button>
+      <button class="tab-btn" data-f="跟单员">面向跟单员 · 3</button>
+    </div>
+    <div class="scenario-grid" id="scenario-grid"></div>
+  </div>
+</section>
+
+<section id="tools">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>工具选型建议</h2>
+      <p>四类工具各司其职，WPS 作为最终资料落地与存档的载体。</p>
+    </div>
+    <div class="tool-grid" id="tool-grid"></div>
+  </div>
+</section>
+
+<section class="alt" id="path">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>实施路径</h2>
+      <p>试点 → 推广 → 固化，三阶段稳步推进，不做一次性大范围切换。</p>
+    </div>
+    <div class="timeline" id="timeline"></div>
+  </div>
+</section>
+
+<section id="benefits">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>预期效益</h2>
+    </div>
+  </div>
+  <div class="wrap"><div class="benefit-row" id="benefit-row"></div></div>
+</section>
+
+<section class="alt" id="risk">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>风险与注意事项</h2>
+      <p>AI 定位为“辅助”而非“替代”，核心机密数据场景需专门评估。</p>
+    </div>
+    <div class="risk-banner">存在真实风险：不建议把完整报价单（客户售价 + 真实成本价）、客户完整邮件、带联系方式的 PO、独家工艺配方原样不加处理地传给任何云端 API。</div>
+    <table class="risk-table">
+      <thead><tr><th>数据类型</th><th>敏感等级</th><th>处理建议</th></tr></thead>
+      <tbody id="risk-body"></tbody>
+    </table>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>迪尚华盛 · 业务员 / 跟单员岗位 AI 提效应用企划</span>
+    <span>制定人：孙思晗</span>
+  </div>
+</footer>
+
+<!-- ---------- Scenario Detail Modal ---------- -->
+<div id="scenario-modal-overlay" onclick="closeScenarioModal(event)">
+  <div id="scenario-modal" onclick="event.stopPropagation()">
+    <button class="modal-close" onclick="closeScenarioModal()" aria-label="关闭">×</button>
+    <div class="modal-head">
+      <div class="modal-topline">
+        <span class="modal-no" id="modal-no">01</span>
+        <span class="modal-tag" id="modal-tag">业务员</span>
+      </div>
+      <h3 id="modal-title"></h3>
+      <div class="modal-meta">
+        <div><span class="ml">使用工具</span><span id="modal-tool"></span></div>
+        <div><span class="ml">适用环节</span><span id="modal-scope"></span></div>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div class="modal-steps-lbl">操作步骤</div>
+      <ol id="modal-steps"></ol>
+      <div class="modal-effect">
+        <div class="modal-steps-lbl">预期效果</div>
+        <p id="modal-effect"></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ---------- Chat Widget ---------- -->
+<div id="chat-fab" onclick="toggleChat()">问 AI</div>
+<div id="chat-panel">
+  <div class="chat-head">
+    <div class="eyebrow">场景 9 · 流程知识库问答</div>
+    <h4>企划问答助手</h4>
+    <p>关于场景用法、工具选型、数据安全等问题，随时问。</p>
+  </div>
+  <div class="chat-body" id="chat-body">
+    <div class="msg bot">你好，我是这份企划的问答助手。你可以问我任意一个 AI 应用场景怎么操作、该用哪个工具，或者数据安全上要注意什么。</div>
+  </div>
+  <div class="chat-suggest" id="chat-suggest"></div>
+  <div class="chat-input">
+    <input id="chat-input" type="text" placeholder="例如：报价单该怎么用AI核对？" onkeydown="if(event.key==='Enter')sendChat()"/>
+    <button id="chat-send" onclick="sendChat()">→</button>
+  </div>
+</div>
+
+<script>
+/* ---------------- data ---------------- */
+const stages = [
+  ["订单确认","邮件通知下单、回签CFA、确认数量出PO/PI","邮箱、WPS表格","信息分散在邮件中，时限要求严格（CFA需2天内回复）"],
+  ["订单准备","进口面料备料、采购合同、进料加工手册、品质样/色样提交","邮箱、WPS表格、ERP","多供应商并行沟通，时限节点多（3/5/10/15天等）"],
+  ["订单生产","面辅料进厂验收、初样/中查/尾查、包装发货","邮箱、WPS、纸质单据","需多人（生产/技术/品检）协同核对，标准细碎"],
+  ["物流与结算","预约入库、仓库验货、订舱、箱单发票、报关、结汇","邮箱、WPS表格","对接境外客户与货代，单据种类多、格式固定"],
+  ["报价流程","资料准备、原辅料核价、整理报价单、跟踪结果","邮箱、WPS表格","报价单需分列“报客户价”与“实际价”，核对易出错"],
+  ["跟单全流程","样品跟起、接单、执行、确认、跟踪、出货、发票、合同总结","邮箱、WPS、纸质工艺单","样板种类多，流程知识依赖经验"],
+];
+
+const pains = [
+  ["信息遗漏","邮件信息密度高，关键数字（数量、日期、颜色）容易遗漏或误读，需人工反复核对"],
+  ["表格重复劳动","大货订单数量表、备料表、报价单、包装说明书手工填写、核对耗时且易出错"],
+  ["翻译依赖人工","工艺单、CFA、包装说明书等中外文互译和专业措辞依赖人工，效率与准确性受限"],
+  ["时限分散","CFA 2天、品质样3天、色样5天、每周五预约入库等节点分散，缺乏统一提醒"],
+  ["协同不透明","跨部门信息传递依赖人工转发邮件，进度不透明"],
+  ["经验依赖","样板定义、验货标准、模板规范高度依赖老员工经验传承，新人上手慢"],
+];
+
+const scenarios = [
+  {no:1, role:"业务员", title:"邮件智能摘要与信息提取", tool:"DeepSeek / 豆包", scope:"邮件通知下单、订单数量周更新、客户变更通知", effect:"关键信息不再依赖逐句阅读摘抄，减少数字、日期看漏看错。",
+   steps:[
+    "收到客人邮件后，将邮件正文（如为英文先不翻译，直接原文）完整复制，粘贴到 DeepSeek 对话框",
+    "使用固定提示词，例如：“请从以下邮件中提取订单号、预售数量、面料到厂时间、发货计划、颜色数量变化等信息，按表格形式输出，缺失项标注‘未提及’”",
+    "DeepSeek 输出结构化表格后，核对与原文是否一致，确认无误后直接复制粘贴进 WPS《订单跟踪表》对应行",
+    "若邮件为外文，可在同一次提问中要求 DeepSeek 同时给出中文翻译，便于同事协同查看",
+    "如信息显示“颜色数量变化特别大”等预警内容，业务员据此第一时间联系面料供应商调整订单数量，并在表格中标记跟进状态",
+    "每周二、周四客人更新数量后，重复以上步骤，持续更新表格，形成动态记录",
+   ]},
+  {no:2, role:"业务员", title:"报价单智能整理与核价辅助", tool:"DeepSeek + WPS 表格", scope:"原辅材料核价、整理报价单", effect:"减少人工核对两套价格时的疏漏，报价单制作效率提升。",
+   steps:[
+    "收到各供应商对原辅料卡的报价回复后，将内容整理粘贴给 DeepSeek，要求“按物料名称、供应商、单价、起订量整理成对比表，并标出每项最低价供应商”",
+    "核对 DeepSeek 生成的对比表数据无误后，录入 WPS 报价单模板对应栏位",
+    "报价单初步完成后，把“报客户价”列和“实际价”列的数据一并提供给 DeepSeek，要求“检查报客户价是否均不低于实际价，并检查两套数据是否存在混淆或漏填”，作为二次核对",
+    "确认报价单无误后，由部门经理和事业部长确认签字",
+    "需要发给客户的报价单，只保留报客户价一栏，可用 DeepSeek/豆包辅助起草报价说明邮件初稿，业务员复核语言和金额准确性后发送",
+   ]},
+  {no:3, role:"业务员", title:"大货订单数量表 / 备料表自动生成", tool:"DeepSeek + WPS 表格", scope:"确认订单数量出PO/PI、订单准备阶段备料", effect:"表格制作和邮件分发的重复劳动大幅减少，格式更统一规范。",
+   steps:[
+    "将客人确认的 PO 数量、面料单耗、各颜色分布等原始数据整理成简单清单，交给 DeepSeek，要求按公司习惯格式（分 PO 列明发货时间）生成《大货订单数量表》草稿",
+    "业务员在 WPS 中核对数据准确性，并调整格式与公司标准模板一致",
+    "用同样方式，结合《大货用料明细》生成《大货备料表》草稿，人工核对后定稿",
+    "请 DeepSeek 或豆包一键生成规范的分发邮件文案（致经理、面辅料担当、生产跟单），说明本次数量表/备料表要点及注意事项",
+    "核对邮件内容与附件一致后，通过企业邮箱群发给所有相关人员",
+   ]},
+  {no:4, role:"业务员", title:"多语言资料翻译与工艺单互译", tool:"DeepSeek", scope:"工艺单、CFA、包装说明书等中外文互译，对外邮件沟通", effect:"翻译效率与专业度提升，术语使用统一，减少理解偏差。",
+   steps:[
+    "整理并维护一份公司专属术语对照表（如“胚布”“大货用料单耗”“匹头样”等），保存为 WPS 表格",
+    "翻译工艺单等资料前，先把术语对照表提供给 DeepSeek 作为参考背景，再粘贴需翻译的原文，要求逐条对照翻译并保留专业用词",
+    "翻译稿由业务员人工复核专业术语和数字（克重、幅宽、数量等）准确无误后，转发给技术科或相关供应商",
+    "对外沟通邮件（如催单、异常说明、交期协商）先用 DeepSeek/豆包生成中文思路草稿，明确要表达的要点",
+    "再让 DeepSeek 将中文草稿翻译成对应外语版本，业务员复核语气是否得体、专业后正式发出",
+    "如遇重要往来内容，翻译稿与原文一并存档，便于后续核查",
+   ]},
+  {no:5, role:"业务员", title:"交期与时限预警清单", tool:"DeepSeek / 豆包 + WPS 表格", scope:"CFA、品质样/色样提交、每周预约入库、货款到期等", effect:"时限节点不再遗漏或临时才发现，异常处理更主动及时。",
+   steps:[
+    "业务员每天上班后，把手上所有在跟订单的关键节点信息（如 CFA 需2天内回复、品质样3天/色样5天提交期限、每周五预约入库、货款到期日等）整理成一份简单清单",
+    "将清单交给 DeepSeek，要求“按紧急程度分类：已逾期 / 24小时内到期 / 本周内到期，并按时间先后排序输出”",
+    "业务员据此安排当天工作优先顺序，对临期或逾期项主动联系相关方（客户、供应商、内部同事）",
+    "每周五，结合本周待入库订单信息，用 DeepSeek/豆包辅助整理《WEEKLY BOOKING FORM》所需内容草稿，人工核对后发送给相关联系人",
+    "每天清单可持续累积，形成个人订单管理台账，月底可用于工作总结回顾",
+   ]},
+  {no:6, role:"业务员", title:"样衣视觉资料生成与客户PPT汇报", tool:"迪尚AI平台 + 豆包/DeepSeek + WPS", scope:"样衣制作完成后的客户展示、销样/影相板制作", effect:"半自动化流程大幅缩短展示资料制作时间，降低模特试穿与拍摄成本。",
+   steps:[
+    "样衣制作完成后，用手机或相机对样衣进行实物拍照，建议白底、光线均匀，尽量拍摄正面平整状态，作为原始素材",
+    "将拍好的样衣照片上传至“迪尚AI平台”—“视觉商拍”模块",
+    "使用“服装转平铺”功能，一键将实物照片转换为专业平铺展示图，去除人为褶皱和背景干扰",
+    "使用“模特上身”功能，将服装虚拟穿着到 AI 模特身上，快速生成上身效果图，无需另约真人模特试穿拍摄",
+    "在模特上身图基础上使用“换角度”功能，导出正面、侧面、背面等多角度效果图，确保客户能全方位查看版型和细节",
+    "将平铺图、模特上身图、多角度图按款号整理归档，形成一套完整视觉素材",
+    "把视觉素材连同产品信息（款号、面料成分、颜色、尺码范围、预计交期等）提供给豆包或 DeepSeek，要求生成一份专业简洁的产品展示 PPT 大纲",
+    "参考 AI 生成的 PPT 大纲和版式建议，在 WPS 演示中将图片素材套入对应页面，核对图文对应准确、无错别字",
+    "PPT 定稿后，用 DeepSeek/豆包辅助起草简短的客户邮件正文，将 PPT 作为附件发送给客户",
+    "将该 PPT 及原始视觉素材按款号归档留存，便于后续同类款式复用，或作为销样、影相板等资料备查",
+   ]},
+  {no:7, role:"跟单员", title:"生产进度自动汇总", tool:"豆包（图片文字识别）+ DeepSeek", scope:"首查/中查/尾查记录汇总，周生产进度报表", effect:"周报整理时间大幅缩短，异常情况能更及时汇总上报。",
+   steps:[
+    "车间班组填报的首查、中查、尾查记录（如为纸质单据），先用豆包的图片识别功能拍照转文字，或直接使用 WPS 电子表格记录",
+    "跟单员将本周各订单的进度数据整理后输入 DeepSeek，要求“按订单号汇总生产进度、异常情况说明、AQL1.5抽验结果，生成生产进度周报”",
+    "核对 DeepSeek 输出的周报草稿与原始记录一致，特别关注异常和不合格项是否准确体现",
+    "确认无误后定稿，通过邮箱发送给业务、经理及相关部门，并附上 WPS 原始记录表备查",
+    "有提前预约验货计划要求的客户订单，同步在周报中注明下周验货预约安排",
+   ]},
+  {no:8, role:"跟单员", title:"工艺核对智能辅助", tool:"DeepSeek", scope:"接到业务翻译的工艺单后、交接技术科样品室前", effect:"减少因工艺单信息不全或理解偏差导致的样衣返工。",
+   steps:[
+    "接到业务翻译好的工艺单文字内容后，完整粘贴给 DeepSeek",
+    "要求 DeepSeek“逐项检查是否包含主料规格（品种/纱支/组织/克重/颜色）、辅料清单（缝纫线/拉链/纽扣/水洗标/吊牌等）、缝制及后整理要求（磨毛/丝光/防静电/防皱等），并列出缺失或表述不清的地方”",
+    "跟单员根据 DeepSeek 列出的疑问清单，与业务、技术核对补充，避免因理解偏差返工",
+    "确认工艺单信息完整准确后，连同齐全的面辅料一并交接给技术科样品室制作样衣",
+   ]},
+  {no:9, role:"跟单员", title:"流程与模板知识库问答", tool:"DeepSeek / 豆包", scope:"新人培训、日常流程/标准查询", effect:"新人上手更快，减少反复打断老员工询问基础流程问题。",
+   steps:[
+    "将本流程文档及各类模板（包装说明书模板、核价单模板、样板定义、AQL验货标准等）整理成电子文本资料",
+    "在 DeepSeek 或豆包中上传/粘贴这些资料，形成可反复调用的问答素材（若工具支持文件上传，可直接上传文档）",
+    "业务员、跟单员或新人遇到流程问题时，直接提问，如“CFA要几天内给出”“AQL验货标准是多少”“船头板一般什么时候寄出”，AI 依据资料给出准确答案",
+    "对于 AI 回答不确定或资料未覆盖的问题，仍需向老员工或经理确认，并将答案补充进资料库",
+    "建议每季度更新一次资料库内容，保持与最新流程版本一致",
+   ]},
+];
+
+const tools = [
+  ["DS","DeepSeek","文本类主力工具","邮件信息提取、翻译、报价核对、表格数据整理、工艺核对、知识问答"],
+  ["豆","豆包","图文办公辅助工具","图片文字识别、内容生成、辅助起草文案、PPT大纲生成"],
+  ["视","迪尚AI平台","服装图片专用工具","服装转平铺、模特上身、换角度，生成产品展示视觉素材"],
+  ["W","WPS","基础办公工具","表格制作、公式计算、PPT排版、文档管理，最终资料落地载体"],
+];
+
+const timelineData = [
+  ["01","试点","约 1 个月","选取 1-2 名业务员、跟单员，先在“邮件摘要”“报价单核对”“样衣视觉资料生成PPT”三个场景试用，收集使用反馈"],
+  ["02","推广","约 2-3 个月","将试点验证有效的场景固化为标准操作模板（SOP + 固定提示词模板），在业务一部全员推广"],
+  ["03","固化与深化","持续","搭建企业内部知识库问答机器人，与邮箱、WPS 工作流打通，逐步把更多场景由“手动问AI”升级为“自动跑AI”"],
+];
+
+const benefits = [
+  ["01","效率提升","显著减少邮件信息整理、表格制作、翻译起草等重复性事务耗时"],
+  ["02","风险降低","降低因信息遗漏、翻译歧义导致的交期延误与品质纠纷风险"],
+  ["03","培养提速","缩短新人上手周期，流程与产品知识可复用、可检索"],
+  ["04","数字化沉淀","逐步积累结构化报价、生产数据，为经营分析打下基础"],
+];
+
+const risks = [
+  ["报价单（客户售价+成本价）","高","去掉客户/供应商名称，只保留物料、数量、价格数字用于逻辑校验；最终报价仍人工核对"],
+  ["客户完整邮件","中","先删除签名档中姓名、电话、地址等联系方式，只保留与订单相关正文内容"],
+  ["带客户联系方式的PO","中","只截取订单号、数量、颜色、交期等生产字段，联系方式做脱敏处理"],
+  ["独家工艺配方","极高","原则上不通过公有云API传输具体配方参数，如需辅助只传结构清单，或考虑本地私有化部署"],
+];
+
+/* ---------------- render ---------------- */
+document.getElementById("stage-body").innerHTML = stages.map((s,i)=>`
+  <tr id="stage-${i}"><td class="name">${s[0]}</td><td>${s[1]}</td><td>${s[2]}</td><td class="note">${s[3]}</td></tr>
+`).join("");
+
+document.getElementById("pain-grid").innerHTML = pains.map((p,i)=>`
+  <div class="pain" id="pain-${i}"><div class="idx">0${i+1}</div><h4>${p[0]}</h4><p>${p[1]}</p></div>
+`).join("");
+
+function renderScenarios(filter){
+  const list = filter==="all" ? scenarios : scenarios.filter(s=>s.role===filter);
+  document.getElementById("scenario-grid").innerHTML = list.map(s=>`
+    <div class="scenario" id="scenario-${s.no}" onclick="openScenarioModal(${s.no})" tabindex="0" onkeydown="if(event.key==='Enter')openScenarioModal(${s.no})">
+      <div class="top"><span class="no">${String(s.no).padStart(2,'0')}</span><span class="tag">${s.role}</span></div>
+      <h4>${s.title}</h4>
+      <div class="tool">${s.tool}</div>
+      <p>${s.scope}</p>
+      <div class="effect"><b>效果　</b>${s.effect}</div>
+      <div class="viewmore">查看详细操作步骤 →</div>
+    </div>
+  `).join("");
+}
+renderScenarios("all");
+document.querySelectorAll(".tab-btn").forEach(btn=>{
+  btn.addEventListener("click", ()=>{
+    document.querySelectorAll(".tab-btn").forEach(b=>b.classList.remove("active"));
+    btn.classList.add("active");
+    renderScenarios(btn.dataset.f);
+  });
+});
+
+document.getElementById("tool-grid").innerHTML = tools.map((t,i)=>`
+  <div class="tool-card" id="tool-${i}"><div class="glyph">${t[0]}</div><h4>${t[1]}</h4><div class="pos">${t[2]}</div><p>${t[3]}</p></div>
+`).join("");
+
+document.getElementById("timeline").innerHTML = timelineData.map((t,i)=>`
+  <div class="tl-stage" id="tl-${i}"><div class="dot">${t[0]}</div><h4>${t[1]}</h4><div class="when">${t[2]}</div><p>${t[3]}</p></div>
+`).join("");
+
+document.getElementById("benefit-row").innerHTML = benefits.map((b,i)=>`
+  <div class="benefit" id="benefit-${i}"><div class="num">${b[0]}</div><h4>${b[1]}</h4><p>${b[2]}</p></div>
+`).join("");
+
+document.getElementById("risk-body").innerHTML = risks.map((r,i)=>{
+  const cls = r[1]==="极高"?"extreme":(r[1]==="高"?"high":"mid");
+  return `<tr id="risk-${i}"><td class="type">${r[0]}</td><td><span class="level ${cls}">${r[1]}</span></td><td>${r[2]}</td></tr>`;
+}).join("");
+
+/* ---------------- scenario detail modal ---------------- */
+function openScenarioModal(no){
+  const s = scenarios.find(x=>x.no===no);
+  if(!s) return;
+  document.getElementById("modal-no").textContent = String(s.no).padStart(2,'0');
+  document.getElementById("modal-tag").textContent = s.role;
+  document.getElementById("modal-title").textContent = s.title;
+  document.getElementById("modal-tool").textContent = s.tool;
+  document.getElementById("modal-scope").textContent = s.scope;
+  document.getElementById("modal-steps").innerHTML = s.steps.map(st=>`<li>${escapeHtml(st)}</li>`).join("");
+  document.getElementById("modal-effect").textContent = s.effect;
+  const overlay = document.getElementById("scenario-modal-overlay");
+  overlay.classList.add("open");
+  document.body.style.overflow = "hidden";
+}
+function closeScenarioModal(e){
+  if(e && e.target !== e.currentTarget && e.type==="click") return;
+  document.getElementById("scenario-modal-overlay").classList.remove("open");
+  document.body.style.overflow = "";
+}
+document.addEventListener("keydown", (e)=>{
+  if(e.key==="Escape") closeScenarioModal();
+});
+
+/* ---------------- finder (search & jump) ---------------- */
+const searchIndex = [];
+stages.forEach((s,i)=> searchIndex.push({title:s[0], tag:"工作阶段", id:`stage-${i}`, kw:s[0]+s[1]+s[2]+s[3]}));
+pains.forEach((p,i)=> searchIndex.push({title:p[0], tag:"痛点", id:`pain-${i}`, kw:p[0]+p[1]}));
+scenarios.forEach(s=> searchIndex.push({title:`场景${s.no}｜${s.title}`, tag:s.role, id:`scenario-${s.no}`, kw:s.title+s.tool+s.scope+s.effect+s.role}));
+tools.forEach((t,i)=> searchIndex.push({title:t[1], tag:"工具", id:`tool-${i}`, kw:t[1]+t[2]+t[3]}));
+timelineData.forEach((t,i)=> searchIndex.push({title:`阶段${t[0]}｜${t[1]}`, tag:"实施路径", id:`tl-${i}`, kw:t[1]+t[2]+t[3]}));
+benefits.forEach((b,i)=> searchIndex.push({title:b[1], tag:"预期效益", id:`benefit-${i}`, kw:b[1]+b[2]}));
+risks.forEach((r,i)=> searchIndex.push({title:r[0], tag:"数据安全", id:`risk-${i}`, kw:r[0]+r[1]+r[2]}));
+
+let finderSelIdx = -1, finderCurrentResults = [];
+
+function onFinderInput(){
+  const q = document.getElementById("finder-input").value.trim();
+  const box = document.getElementById("finder-results");
+  finderSelIdx = -1;
+  if(!q){ box.innerHTML=""; finderCurrentResults=[]; return; }
+  const matches = searchIndex.filter(item=> item.kw.includes(q) || item.title.includes(q));
+  finderCurrentResults = matches.slice(0,8);
+  if(finderCurrentResults.length===0){
+    box.innerHTML = `<div class="finder-empty">没找到"${escapeHtml(q)}"相关内容，换个词试试，比如场景名称、工具名或"风险"</div>`;
+    return;
+  }
+  box.innerHTML = finderCurrentResults.map((m,i)=>`
+    <div class="finder-item" data-i="${i}" onclick="finderJumpTo('${m.id}')">
+      <span class="ft-title">${escapeHtml(m.title)}</span>
+      <span class="ft-tag">${escapeHtml(m.tag)}</span>
+    </div>
+  `).join("");
+}
+function onFinderKeydown(e){
+  if(e.key==="Enter"){ finderJumpFirst(); return; }
+  if(e.key==="ArrowDown" || e.key==="ArrowUp"){
+    e.preventDefault();
+    if(finderCurrentResults.length===0) return;
+    finderSelIdx += (e.key==="ArrowDown") ? 1 : -1;
+    finderSelIdx = (finderSelIdx + finderCurrentResults.length) % finderCurrentResults.length;
+    document.querySelectorAll(".finder-item").forEach((el,i)=> el.classList.toggle("sel", i===finderSelIdx));
+  }
+}
+function finderJumpFirst(){
+  if(finderSelIdx>=0 && finderCurrentResults[finderSelIdx]){ finderJumpTo(finderCurrentResults[finderSelIdx].id); return; }
+  if(finderCurrentResults.length>0){ finderJumpTo(finderCurrentResults[0].id); }
+}
+function finderJumpTo(id){
+  const el = document.getElementById(id);
+  if(!el) return;
+  const y = el.getBoundingClientRect().top + window.pageYOffset - 84;
+  window.scrollTo({top:y, behavior:"smooth"});
+  el.classList.add("jump-highlight");
+  setTimeout(()=> el.classList.remove("jump-highlight"), 2900);
+}
+
+/* ---------------- font size control ---------------- */
+const fontSteps = [1, 1.12, 1.25, 1.4];
+let fontStepIdx = 0;
+function changeFontSize(dir){
+  fontStepIdx = Math.min(fontSteps.length-1, Math.max(0, fontStepIdx+dir));
+  document.body.style.zoom = fontSteps[fontStepIdx];
+}
+
+/* ---------------- chat widget ---------------- */
+const KB = `
+你是“迪尚华盛业务员/跟单员岗位 AI 提效应用企划”的内部问答助手。请只依据下面的企划内容回答员工问题，语气专业、简洁、口语化，直接给出可执行的操作建议。如果问题超出企划范围，坦诚说明企划中未覆盖，并建议向经理或IT确认，不要编造。
+
+【背景与目标】
+迪尚华盛正处于由 OEM 向 ODM 转型的关键阶段，业务量与客户对接文档量持续增加。业务员、跟单员的日常工作高度依赖邮件往来和 WPS/Excel 表格整理，涉及订单确认、面辅料准备、报价核价、生产跟单、包装发货、结汇对账等十余个环节。目标：在不改变现有 WPS+邮箱办公习惯的前提下，分阶段引入AI能力，把业务员和跟单员从重复性信息整理、表格制作、翻译起草工作中解放出来，用更多精力做客户沟通、异常判断与经营决策，降低信息遗漏导致的交期、品质风险。
+
+【六大工作阶段】
+1.订单确认：邮件通知下单、回签CFA、确认数量出PO/PI（邮箱、WPS表格；CFA需2天内回复）
+2.订单准备：进口面料备料、采购合同、进料加工手册、品质样/色样提交（邮箱、WPS表格、ERP；节点多，3/5/10/15天等）
+3.订单生产：面辅料进厂验收、初样/中查/尾查、包装发货（邮箱、WPS、纸质单据；需生产/技术/品检协同）
+4.物流与结算：预约入库、仓库验货、订舱、箱单发票、报关、结汇（邮箱、WPS表格；对接境外客户与货代）
+5.报价流程：资料准备、原辅料核价、整理报价单、跟踪结果（报价单需分列"报客户价"与"实际价"，核对易出错）
+6.跟单全流程：样品跟起、接单、执行、确认、跟踪、出货、发票、合同总结（样板种类多：头板/销样/PP样/齐码板/船样）
+
+【当前主要痛点】
+邮件关键数字容易看漏看错；大货订单数量表/备料表/报价单/包装说明书手工制作耗时易错；工艺单/CFA/包装说明书翻译依赖人工；CFA2天、品质样3天、色样5天、每周五预约入库等时限节点分散无统一提醒；跨部门协同信息传递依赖人工转发，进度不透明；流程知识（样板定义、验货标准）依赖老员工经验，新人上手慢。
+
+【9大AI应用场景】（面向业务员1-6，面向跟单员7-9）
+场景1｜邮件智能摘要与信息提取：工具DeepSeek/豆包。将客户邮件原文粘贴给DeepSeek，用固定提示词"请从以下邮件中提取订单号、预售数量、面料到厂时间、发货计划、颜色数量变化等信息，按表格形式输出，缺失项标注未提及"，核对后录入WPS《订单跟踪表》。外文邮件可同时要求给出中文翻译。
+场景2｜报价单智能整理与核价辅助：工具DeepSeek+WPS表格。把供应商报价整理粘贴给DeepSeek，要求"按物料名称、供应商、单价、起订量整理成对比表，并标出每项最低价供应商"；报价单做完后把"报客户价"和"实际价"一起给DeepSeek做二次核对"检查报客户价是否均不低于实际价"，避免误发实际价给客户。
+场景3｜大货订单数量表/备料表自动生成：工具DeepSeek+WPS表格。把PO数量、面料单耗、颜色分布整理成清单交给DeepSeek按公司格式生成表格草稿，人工核对定稿后一键生成分发邮件文案。
+场景4｜多语言资料翻译与工艺单互译：工具DeepSeek。先维护公司专属术语对照表（如"胚布""大货用料单耗""匹头样"）作为翻译背景参考，再粘贴原文逐条对照翻译，人工复核专业术语和数字准确性。
+场景5｜交期与时限预警清单：工具DeepSeek/豆包+WPS表格。把所有在跟订单关键节点整理成清单，交给AI"按紧急程度分类：已逾期/24小时内到期/本周内到期，并按时间先后排序输出"，据此安排当天工作优先顺序。
+场景6｜样衣视觉资料生成与客户PPT汇报：工具迪尚AI平台(视觉商拍)+豆包/DeepSeek+WPS演示。样衣实物拍照上传"迪尚AI平台-视觉商拍"，用"服装转平铺"生成平铺图，"模特上身"生成上身效果图，"换角度"生成多角度图；再把视觉素材和产品信息给豆包/DeepSeek生成PPT大纲，套入WPS定稿。
+场景7｜生产进度自动汇总：工具豆包(图片文字识别)+DeepSeek。首查/中查/尾查纸质记录用豆包拍照转文字，整理后给DeepSeek"按订单号汇总生产进度、异常情况说明、AQL1.5抽验结果，生成生产进度周报"。
+场景8｜工艺核对智能辅助：工具DeepSeek。把业务翻译好的工艺单文字粘贴给DeepSeek，要求"逐项检查是否包含主料规格(品种/纱支/组织/克重/颜色)、辅料清单(缝纫线/拉链/纽扣/水洗标/吊牌等)、缝制及后整理要求，并列出缺失或表述不清的地方"。
+场景9｜流程与模板知识库问答：工具DeepSeek/豆包。把流程文档及各类模板整理成电子文本上传/粘贴给AI形成问答素材，新人或员工遇到流程问题（如"CFA要几天内给出""AQL验货标准是多少"）可直接提问；AI回答不确定时仍需向老员工或经理确认。
+
+【工具选型建议】
+DeepSeek：文本类主力工具，擅长邮件信息提取、翻译、报价核对、表格数据整理、工艺核对、知识问答，作为日常文字类工作第一入口。
+豆包：图文办公辅助工具，擅长图片文字识别、内容生成、辅助起草文案、PPT大纲生成，适合处理含图片的素材。
+迪尚AI平台-视觉商拍：服装图片专用工具，服装转平铺、模特上身、换角度，样衣拍照后第一时间处理。
+WPS(含WPS AI)：基础办公工具，表格制作、公式计算、PPT排版、文档管理，是最终资料落地与存档的载体。
+说明：涉及客户价格、合同等敏感信息时，优先使用企业内部认可的账号/部署方式，避免通过个人免费账号处理。
+
+【进阶方案：接入API】
+目前场景本质是"人工打开网页对话框-手动复制粘贴内容-等待AI回复-再手动复制回表格/邮件"。如果公司采购官方API接入WPS、邮箱、企业微信等系统，AI可在后台自动运行，员工只需点按钮、上传文件或无需操作，最后做结果确认。需要IT或外部服务商做一次性开发投入，开发完成后员工使用方式跟点开网页按钮一样简单，不需要写代码或接触API Key。
+DeepSeek API：文本推理与复杂逻辑能力强，擅长多表交叉核算；官方对话接口以文本为主，图片需额外调用其他产品；无现成知识库产品；模型权重开源支持本地私有化部署；调用成本极致低价。
+豆包/火山方舟API：中文表达和商务语气更贴近国内办公习惯；原生支持图像理解和文字识别；自带"私域知识库搜索"功能配置简单；闭源模型只能云端调用；价格有竞争力。
+建议：涉及图片场景(样衣照片处理、纸质单据OCR)优先豆包/火山方舟；知识库问答优先豆包；纯文本强逻辑核算(报价核价、多表交叉校验)优先DeepSeek；其余文本类场景(邮件摘要、翻译、交期预警、生产周报)两者接近，可各选一个小范围试用后再定，不必只选一个全部替换。
+
+【实施路径】
+阶段一(试点，约1个月)：选1-2名业务员、跟单员在"邮件摘要""报价单核对""样衣视觉资料生成PPT"三场景试用，收集反馈。
+阶段二(推广，约2-3个月)：把验证有效的场景固化为SOP+固定提示词模板，在业务一部全员推广，搭建术语库与历史样板问题清单雏形。
+阶段三(固化与深化，持续)：搭建企业内部知识库问答机器人，与邮箱、WPS工作流打通，定期复盘优化，逐步把更多场景由"手动问AI"升级为"自动跑AI"。
+
+【预期效益】
+显著减少邮件信息整理、表格制作、翻译起草等重复性事务耗时(具体节省比例待试点阶段测算)；降低因信息遗漏、翻译歧义导致的交期延误与品质纠纷风险；缩短新人上手周期，减轻老员工带教负担；逐步积累结构化报价、生产数据，为经营分析打下数字化基础。
+
+【风险与注意事项：敏感数据是否会泄露】
+存在真实风险，不建议把完整报价单(客户售价+真实成本价)、客户完整邮件、带联系方式的PO、独家工艺配方原样传给任何云端API(不论DeepSeek还是豆包)。
+第一层，传输和存储风险：调用云端模型时输入内容经公网发送到服务商服务器，不留在公司内部电脑，服务商通常短期保留请求日志，是否被内部人员接触或因安全漏洞暴露，公司无法完全控制。
+第二层，是否用于模型训练：DeepSeek隐私政策写明输入输出"可能"脱敏后用于训练，消费版可关闭，但开放平台(API)未明确承诺"默认不用于训练"，需企业单独签署数据处理协议(DPA)；豆包/火山方舟同样需以企业合同为准。
+
+【分场景数据处理建议】
+报价单(客户售价+成本价)-敏感等级高：去掉客户/供应商名称，只保留物料、数量、价格数字用于逻辑校验，AI只负责检查数字关系是否合理，最终报价仍人工核对。
+客户完整邮件-敏感等级中：传给AI前先删除签名档中姓名、电话、地址等联系方式，只保留与订单相关正文内容。
+带客户联系方式的PO-敏感等级中：只截取订单号、数量、颜色、交期等生产相关字段，联系方式做脱敏(如替换为"客户A")或不包含在传给AI的内容里。
+独家工艺配方-敏感等级极高：原则上不通过公有云API传输具体配方参数，如需AI辅助核对工艺单完整性，只传"是否包含主料规格/辅料清单/后整理要求"这类结构清单不传具体数值，业务上离不开时应考虑本地私有化部署(DeepSeek开源权重支持本地部署)，数据不出公司内网。
+其他注意事项：账号使用企业统一认可的账号或API Key，避免个人免费账号；采购合同中明确"数据不用于模型训练""数据留存期限"等条款；AI输出(尤其翻译、核价、报价单)仍需业务员/跟单员复核后才能对外发送，AI定位为"辅助"而非"替代"；分阶段推进，核心机密数据类场景放到最后且需专门评估后再决定是否接入。
+`;
+
+const suggestQuestions = [
+  "报价单该怎么用AI核对？",
+  "样衣照片怎么变成客户PPT？",
+  "客户邮件能直接粘贴给AI吗？",
+  "DeepSeek和豆包该选哪个？",
+];
+document.getElementById("chat-suggest").innerHTML = suggestQuestions.map(q=>`<div class="chip" onclick="askSuggested('${q}')">${q}</div>`).join("");
+
+let chatOpen = false;
+function toggleChat(){
+  chatOpen = !chatOpen;
+  document.getElementById("chat-panel").classList.toggle("open", chatOpen);
+}
+function askSuggested(q){
+  document.getElementById("chat-input").value = q;
+  sendChat();
+}
+
+async function sendChat(){
+  const input = document.getElementById("chat-input");
+  const text = input.value.trim();
+  if(!text) return;
+  const body = document.getElementById("chat-body");
+  const sendBtn = document.getElementById("chat-send");
+
+  body.innerHTML += `<div class="msg user">${escapeHtml(text)}</div>`;
+  input.value = "";
+  input.disabled = true; sendBtn.disabled = true;
+  body.innerHTML += `<div class="msg bot typing" id="typing-msg">正在查阅企划内容…</div>`;
+  body.scrollTop = body.scrollHeight;
+
+  try{
+    const resp = await fetch("https://api.anthropic.com/v1/messages", {
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body: JSON.stringify({
+        model:"claude-sonnet-4-6",
+        max_tokens:700,
+        system: KB,
+        messages:[{role:"user", content:text}]
+      })
+    });
+    const data = await resp.json();
+    const answer = (data.content||[]).filter(c=>c.type==="text").map(c=>c.text).join("\n").trim() || "抱歉，我暂时没能生成回答，请换个问法试试。";
+    document.getElementById("typing-msg").remove();
+    body.innerHTML += `<div class="msg bot">${escapeHtml(answer).replace(/\n/g,"<br>")}</div>`;
+  }catch(err){
+    document.getElementById("typing-msg").remove();
+    body.innerHTML += `<div class="msg bot">网络请求出了点问题，请稍后再试。</div>`;
+  }
+  input.disabled = false; sendBtn.disabled = false;
+  body.scrollTop = body.scrollHeight;
+  input.focus();
+}
+function escapeHtml(str){
+  const d = document.createElement("div");
+  d.innerText = str;
+  return d.innerHTML;
+}
+</script>
+</body>
+</html>
