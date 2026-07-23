@@ -324,6 +324,46 @@
   .modal-effect p{ font-size:15.5px; color:var(--ink-70); }
 
   /* ---------- tools ---------- */
+  /* ---------- training accordion ---------- */
+  #training .tabs{ margin-bottom:36px; }
+  .accordion{ display:flex; flex-direction:column; gap:12px; margin-bottom:64px; }
+  .acc-item{ border:1px solid var(--line); border-radius:6px; overflow:hidden; background:var(--paper); }
+  .acc-head{
+    display:flex; justify-content:space-between; align-items:center;
+    padding:20px 24px; cursor:pointer; user-select:none; gap:16px;
+  }
+  .acc-head:hover{ background:rgba(192,138,46,.06); }
+  .acc-head-left{ display:flex; align-items:center; gap:14px; min-width:0; }
+  .acc-phase-no{ font-family:"Spectral",serif; color:var(--brass); font-size:17px; font-weight:600; flex-shrink:0; }
+  .acc-head h4{ font-size:17px; font-weight:700; }
+  .acc-head-right{ display:flex; align-items:center; gap:14px; flex-shrink:0; }
+  .acc-count{ font-size:12.5px; color:var(--ink-45); white-space:nowrap; }
+  .acc-chevron{ transition:transform .25s; color:var(--brass); font-size:13px; display:inline-block; }
+  .acc-item.open .acc-chevron{ transform:rotate(180deg); }
+  .acc-body{ max-height:0; overflow:hidden; transition:max-height .32s ease; }
+  .acc-steps{ list-style:none; padding:0 24px 22px 24px; display:flex; flex-direction:column; gap:15px; counter-reset:accstep; border-top:1px dashed var(--line); margin:0 24px; padding-top:18px; }
+  .acc-body .acc-steps{ margin:0; padding-left:24px; padding-right:24px; }
+  .acc-steps li{ counter-increment:accstep; display:flex; gap:14px; font-size:14.6px; line-height:1.65; color:var(--ink-70); }
+  .acc-steps li::before{
+    content:counter(accstep); flex-shrink:0; width:25px; height:25px; border-radius:50%;
+    background:var(--ink); color:var(--brass-light); font-family:"Spectral",serif; font-weight:600; font-size:12px;
+    display:flex; align-items:center; justify-content:center; margin-top:2px;
+  }
+  .acc-steps li b{ color:var(--ink); font-weight:700; }
+  .acc-sub{ font-size:12.8px; color:var(--ink-45); margin-top:6px; padding-left:2px; border-left:2px solid var(--brass); padding-left:10px; }
+
+  /* ---------- quick reference cards ---------- */
+  .quickref{ border-top:1px solid var(--line); padding-top:56px; }
+  .quickref-head h3{ font-size:27px; margin-bottom:8px; font-weight:700; }
+  .quickref-head p{ color:var(--ink-70); font-size:15.3px; margin-bottom:26px; max-width:640px; }
+  .quickref-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-top:8px; }
+  .qcard{ border:1px solid var(--line); border-radius:6px; padding:19px 21px; background:var(--paper); transition:border-color .2s, transform .2s; }
+  .qcard:hover{ border-color:var(--brass); transform:translateY(-2px); }
+  .qcard.hidden{ display:none; }
+  .qcard .qc-cat{ font-size:11px; font-weight:700; color:var(--brass); text-transform:uppercase; letter-spacing:.04em; margin-bottom:10px; }
+  .qcard .qc-title{ font-size:15.3px; font-weight:700; margin-bottom:6px; line-height:1.4; color:var(--ink); }
+  .qcard .qc-detail{ font-size:13.6px; color:var(--ink-70); line-height:1.55; }
+
   .tool-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:18px; }
   .tool-card{ border:1px solid var(--line); border-radius:4px; padding:22px; background:var(--paper); }
   .tool-card .glyph{ width:38px; height:38px; border-radius:3px; background:var(--ink); color:var(--brass-light); display:flex; align-items:center; justify-content:center; font-family:"Spectral",serif; font-weight:600; font-size:17.7px; margin-bottom:16px;}
@@ -410,6 +450,10 @@
     .hero-grid{ grid-template-columns:1fr; }
     .hero h1{ font-size:38px; }
     .twocol{ grid-template-columns:1fr; }
+    .quickref-grid{ grid-template-columns:1fr; }
+    .acc-head{ padding:16px 18px; }
+    .acc-head h4{ font-size:15px; }
+    .acc-count{ display:none; }
     .api-cols{ grid-template-columns:1fr; }
     .api-scenario-head{ display:none; }
     .api-scenario-row{ grid-template-columns:1fr; gap:10px; }
@@ -441,6 +485,7 @@
       <a href="#bg">背景目标</a>
       <a href="#pain">痛点</a>
       <a href="#scenarios">应用场景</a>
+      <a href="#training">新人培训</a>
       <a href="#tools">工具选型</a>
       <a href="#api">API进阶方案</a>
       <a href="#path">实施路径</a>
@@ -551,12 +596,41 @@
       <h2>9 大 AI 应用场景</h2>
       <p>从“输入什么素材—如何操作—产出什么结果”完整写出，方便直接对照执行。</p>
     </div>
-    <div class="tabs">
+    <div class="tabs" id="scenario-tabs">
       <button class="tab-btn active" data-f="all">全部 9 项</button>
       <button class="tab-btn" data-f="业务员">面向业务员 · 6</button>
       <button class="tab-btn" data-f="跟单员">面向跟单员 · 3</button>
     </div>
     <div class="scenario-grid" id="scenario-grid"></div>
+  </div>
+</section>
+
+<section id="training">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>新人培训：完整业务流程教学</h2>
+      <p>照着公司原始流程文件逐条还原，业务人员和跟单人员各自的操作全流程，点开每个阶段查看详细步骤。</p>
+    </div>
+    <div class="tabs" id="training-role-tabs">
+      <button class="tab-btn active" data-role="business">业务人员操作流程</button>
+      <button class="tab-btn" data-role="merch">跟单人员操作流程</button>
+    </div>
+    <div class="accordion" id="training-accordion"></div>
+
+    <div class="quickref">
+      <div class="quickref-head">
+        <h3>重点速记卡</h3>
+        <p>把最容易记错、忘记的硬性规定单独抽出来，新人可以随时翻看复习，不用重新在长文里找。</p>
+      </div>
+      <div class="tabs" id="quickref-tabs">
+        <button class="tab-btn active" data-cat="all">全部</button>
+        <button class="tab-btn" data-cat="时限">时限类</button>
+        <button class="tab-btn" data-cat="数量">数量类</button>
+        <button class="tab-btn" data-cat="标准">验货标准</button>
+        <button class="tab-btn" data-cat="样板">样板类型速查</button>
+      </div>
+      <div class="quickref-grid" id="quickref-grid"></div>
+    </div>
   </div>
 </section>
 
@@ -817,6 +891,174 @@ const apiScenarioEffects = [
   {no:9, title:"流程与模板知识库问答", now:"需要单独打开AI网页，粘贴问题才能得到答案", after:"知识库问答机器人直接接入企业微信/OA，员工在工作群里@机器人提问即可即时获得答案，无需切换应用"},
 ];
 
+/* ---------------- training: 业务人员操作流程 ---------------- */
+const trainingBusiness = [
+  {title:"确认订单阶段 · 邮件通知下单", steps:[
+    "客人邮件通知确认下单，此时只会给出预计面料到厂时间和发货计划，通常没有准确数量，而是给一个预售数量，之后每周二或周四更新数量",
+    "同时给出面料供应商联系方式，要先给面料商下面料订单，让他们准备胚布；每周根据更新的销售数量变更面料数量，颜色数量变化特别大时要马上通知供应商调整订单数量",
+    "后续客人还会陆续给出：面料品质挂卡、面料颜色样（1份A4样、1份32K纸样）、大货辅料卡、大货工艺单、大货样板（电子版）、洗标画稿和条形码画稿（订单准确数量出来后给出）、原样衣",
+  ]},
+  {title:"确认订单阶段 · 回签CFA", steps:[
+    "客人下单后会给出空白CFA（成衣面料成份和洗涤方法），要求填写并签字盖章扫描邮件回给客户对接人；客人根据这个CFA出洗标画稿，所有信息一定要准确",
+    "面料成分洗涤要求需跟国外面料供应商索要面料的CFA；里料等其他成分信息要面辅料担当跟自己的供应商落实清楚",
+    "CFA要在 2 天内给出，否则客人不给出正式PO，也不能做大货工艺单",
+  ]},
+  {title:"确认订单阶段 · 确认订单数量，出正式PO", steps:[
+    "整理《大货订单数量表》：业务担当根据客人的PO数量和面料订料情况，结合实际用料单耗（技术人员根据大货工艺和大货样板给出准确单耗），计算出准确的《大货订单数量表》，按PO写清楚发货时间，邮件给所有相关人员",
+    "做PI给客户确认交期：将准确的订单数量和面辅料到厂时间落实好，交代给生产跟单人员，告知工厂排产计划，落实交期能否满足客人要求；能满足则出PI给客户，不能满足则协商是否分PO或分颜色发货，确认后出PI双方留底作为发货付款依据",
+    "补充：收到正式PO后如出现以下情况可让客户更改PO或确认我方PI——①颜色数量太少、面料不够起订量，需变更面料价格和成衣价格；②辅料品质跟之前报价品质不一样；③大货样衣做工比之前报价复杂；④面料交期晚于报价时预计交期",
+    "做《大货备料表》：根据最新《大货订单数量表》和《大货用料明细》，将《大货备料表》分发给经理、面辅料担当、生产跟单等相关人员",
+  ]},
+  {title:"订单准备阶段 · 进口面料准备", steps:[
+    "收到客人确认订单和预计销售数量后，按客人报价单耗、最多的预计数量计算出面料需用数量，告知供应商准备胚布；如供应商需先下单，按每个颜色 70-80% 的数量先下给供应商，剩余尾数尽量保证够最低起订量，否则可能产生附加费用",
+    "要告知供应商这是预计总数量，说明最终准确数量和大货交期的时间点；不够起订量的面料要等最终数量出来再下，能分批下单的分批下单（部分面料供应商需单独出PO，就单独下PO）",
+    "同时需要跟面料商调 PP 样用的样布，一般做 2 件样衣，按单耗调 4 件的样布用量",
+    "做采购合同：准确数量出来后，马上根据准确数量做采购合同，录入 ERP",
+    "办理进料加工手册：将面料信息（成分、克重、有效幅宽、数量、单价）和成衣信息（款式图、数量、单价）给储运部办理进料加工手册；涉及保税区的 PO（如074/075）要单独标明数量，手册出来后马上去上海保税区备案",
+  ]},
+  {title:"订单准备阶段 · 国内面辅料准备", steps:[
+    "品质样、颜色样提交：面辅料担当收到《订单数量表》和《备料表》后，安排找之前报价的辅料供应商提供正确品质样，按大货数量重新报价；所有品质样要在收到订单后一周内提交，提交品质样同时要计算出 PP 样用量一起调回来",
+    "品质和价格最佳的供应商，安排打大货正确颜色样品一次性提交确认（在订单下单 10 天内完成）；如报价时品质样未确认的供应商，需同步开发品质（需开模的）和颜色样，最晚 15 天内提交正确颜色品质的样品，面辅料担当同时制作《采购合同》",
+    "面辅料样品提交时效：品质样 3 天内，色样 5 天内。原则上尽量减少提交次数，能一次性确认的最好一次性确认；不合格品质可直接否掉重新开发提交；无法达标的（询问3-4家供应商后仍不能做到）先提供类似品质样提交，建议客人更换；需要开模的价格至少询三家对比，价格质量最好的马上安排开模",
+    "提交样品时供应商一式 3 份：发意大利一份，自己留底一份，工厂生产担当一份，贴大货确认样卡，大货到厂时对照确认",
+    "大货品质样提交——里料大货匹头样：发出大货前要发 3 米大货匹头样确认，1米寄意大利，1米寄上海测试，0.5米自己留底，0.5米发给工厂确认收货",
+    "大货品质样提交——拉链大货样：供应商额外提供 3-5 条任意颜色拉链，发上海测试用",
+    "大货品质样提交——金属辅料：每种大货金属辅料到厂后提供 5-10 个，发到上海客户办公室测试",
+    "大货品质样提交——衬/丝棉/缝线等辅料：不能单独直接提交确认，要粘在面料上，或纺棉纺好、缝线做好小样提交确认",
+  ]},
+  {title:"订单准备阶段 · PP样", steps:[
+    "尽量用正确面料辅料做 PP 样；时间来不及时，面料里料必须用正确品质，可以代用颜色，辅料可以代用，但要订好商标位置和包装材料，挂好吊牌",
+    "发 PP 样直接按原样找代用吊牌确认吊牌挂的位置和方法，包装按大货要求确认包装方法",
+  ]},
+  {title:"订单生产阶段 · 面辅料进厂", steps:[
+    "面辅料担当提前排出发料计划，告知生产担当；大货发出后第一时间将到货码单和到货时间通知生产担当，生产担当将码单和到料时间通知仓库或外工厂准备接货",
+    "到货后面辅料担当和生产担当第一时间检验或抽验，发现短码和质量问题第一时间反馈供应商，要求三天内仓库给出签收明细（特别是客供商标吊牌类物品，一定要及时清点，有短缺残次情况第一时间反馈）",
+    "第二，要严格对照之前确认的样品，比对大货时跟确认样一致，一定要避免错误的东西用到生产上",
+  ]},
+  {title:"订单生产阶段 · 初样 / 中查 / 尾查", steps:[
+    "初样：班组投产后出的首件，生产担当要仔细核对首件和 PP 样、原样，给班组写出首件意见（班长签字）",
+    "MAXMARA 要求所有订单生产都要首查、中查、尾查，每周四报生产报表时要提前预约下周的验货计划",
+    "中查：要求尽量齐色起码",
+    "尾查：要求至少完成包装 80% 才可以验货，验货按照 AQL1.5 标准抽验",
+  ]},
+  {title:"订单生产阶段 · 包装发货", steps:[
+    "业务担当在大货工艺单翻译完成后尽快制作出《包装说明书》，清晰指示每批订单的包装要求（挂装还是平装）、每个 PO 的箱唛、海运空运方式、074/075 等特殊 BLP 的箱唛与包装方法（见模板《50760359大货包装说明书》）",
+    "包装材料用料说明详见工艺单和《MAXMARA装运指示》《包装指示书》，工厂严格按照包装说明书包装，发货到 MOVIMODA 仓库",
+  ]},
+  {title:"订单生产阶段 · 预约入库 / 仓库验货", steps:[
+    "预约入库：每周五要对下周需入货的货物提前预约，填写《WEEKLY BOOKING FORM》邮件发给 MOVIMODA 的 Tiffany、Zhou Xin，以便安排预约验货",
+    "仓库验货：发货当天，要将《Detail Packing List》和《Delivery note》邮件发给 MOVIMODA 的 Robby Wang、Zhou Xin、Tiffany，和 MaxMara 上海的 Grace、Joy",
+  ]},
+  {title:"订单生产阶段 · 订舱 / 箱单发票-报关", steps:[
+    "订舱：货物离开工厂后，将发货数据（款号、数量、箱数、重量、体积）先给储运部提前订舱，但要告知这不是最终数量，待仓库验货完成后会有准确数量",
+    "MOVIMODA 验完货会出一份箱单，根据此数据马上做出箱单发票，邮件发给 Tiffany；MOVIMODA 收到发票后录入系统才能安排通知货代提货，仓库早一点收到箱单发票就能早一点发货，也能早一点结汇",
+    "收到仓库的箱单后要马上做出箱单发票，同时也要做箱单发票给货代报关；这两个发票通常一样，除非有调整报关金额的情况——如需调整要提前告知储运部调整金额，并做好记录是哪个发票号做的调整，便于后期跟财务对账",
+  ]},
+  {title:"订单生产阶段 · 结汇收汇", steps:[
+    "业务担当将每次发货做好的发票金额、运单单号、发货日期、应付款日期统计到《PAYMENT STATUS》做好记录，货款到期时提前邮件提醒客人付款",
+    "收到客户付款通知后，转给财务查收；到账后记录到账金额，如有差别需要跟客户核对清楚，以便后续做差额调整，跟财务做好对账工作",
+    "至此整个订单业务流程完成",
+  ]},
+  {title:"报价流程", steps:[
+    "资料准备：收到客人报价邮件后，整理报价进度表，跟进所有面辅料样卡、工艺、面料单耗；翻译工艺有缺少的物料和不清楚的地方及时跟客人沟通",
+    "原辅材料核价：将收到的原辅材料卡整理发给相应供应商询价，3 天内所有价格都要收到",
+    "整理报价单：按照客人要求的报价单格式整理好报价单，报价单要按照报给客户价格和实际价格分开格式整理，给部门经理和事业部长确认；发给客户的报价单必须只有报价价格，不能有实际价格",
+    "落实跟踪报价结果：询问客户对报价的意见，及时调整报价",
+  ]},
+];
+
+/* ---------------- training: 跟单人员操作流程 ---------------- */
+const trainingMerch = [
+  {title:"接单前准备 · 首先是从样品跟起", steps:[
+    "核对工艺：接到业务翻译的工艺单，首先核对工艺单，看有没有不理解、不正确的地方，跟技术核对样板时间",
+    "检查主料：面料的品种、纱支、组织、克重、颜色，弄清楚是否有特别要求（磨毛、丝光、防静电、防皱等处理）；面料跟单要求下单给布厂订样布，或提供面料小样给布厂分析组织成分，要求对方报价提供样布",
+    "检查辅料：包括底面缝纫线、拉链（是否特指如YKK）、纽扣、鸡眼、人字带、花边、丈巾、罗纹、主标、水洗标、吊牌、装饰牌等，整理清楚查寻本厂是否有仓存物料可用，如没有速跟业务或面辅料跟单确认到厂时间",
+    "跟技术核对工艺落实样板时间：告知技术面辅料要求（有无洗水要求）、用线要求、缝制要求、印绣花及其它处理，交样板日期等",
+    "交接技术科：完整的样板工艺生产通知单+齐全的面辅料交给技术科样品室做样品",
+    "样衣制作与洗水、后整：样品室做好样衣后交给跟单员查看样衣是否符合各项要求，再交给联系好的洗水厂并交代清楚洗水要求（如需水洗），洗水回来由跟单员检查核对是否符合要求",
+    "样衣寄送：整理好样衣，检查辅料齐全、尺寸无误后交给业务员，业务员核对无误后寄给客人",
+  ]},
+  {title:"接单前准备 · 报价", steps:[
+    "填写核价单：跟单员寄出样衣同时安排进行核价，并填写核价单，填写时要认真、清晰、力求准确，包括面料幅宽、用量、单价，印/绣花价格和各种物料用量、加工费、洗水费等其他费用",
+    "核实生产难度：核实工艺单上客户要求的有关面料生产的生产难易度，算产量与加工费；提供工艺单及样衣给生产部（外工厂）对照，进行生产量及加工费的计算和报价",
+  ]},
+  {title:"接单", steps:[
+    "报完价后，如客户觉得价格接近或可以接受，会给出目标价、大货大约数量，要求先安排定织胚布、打 LID 色板和安排再起确认样板",
+    "起确认样板时关键在于保证交期及质量，因此跟单员经手的资料务必准确，与客户要求一致，才能保证样品及时得到确认，避免重复返工",
+  ]},
+  {title:"大货生产常做的几种样衣（sample）", steps:[
+    "头板（proto-sample）：主要看做工和 FITTING 的，可以用代替面料，但当有配色时一定要搭配合适才行，尺寸做工完全按照客供指示及要求",
+    "推销板 / 销售样（Salesman sample）：作为销售样，颜色要对，辅料要齐，印绣花也要按照要求，特别是代表大货面料一定要好——因为销样是客人用于展销会的展办，目的是将新款式通过展销获得定单，做得不好就前功尽弃",
+    "产前样（PP-sample）：为了保证大货的准确性，在裁剪前做给客户看的样板，代表大货质量，也是客户对大货的检验",
+    "影相板/照相板（Photo-sample）：一般在订单确定后、大货出货前，客户用来扩大宣传、增加销售量的样办，主要看款式外观效果，一定要起到门面作用",
+    "齐色齐码板（Size set sample）：只针对特定客户的订单，大货下来后会要求先安排跳码板（可以用代布和物料），待跳码板确认后再做正确大货布齐色齐码板给客户确认 OK 后才可开裁",
+    "洗水样板：一般由跟单员自己批核，洗水要求跟客人要求，要保证成衣水洗尺寸，必须提前做好面料缩水率测试；如洗水差异跟客人样板出入较大、返洗又实在无法达到客人要求的，就挑出落色办给客人批核确认，并跟客人解释沟通以得到认可",
+    "船头板/船样（Shipping sample）：大多数客户船头板要求板房在出货前 6-10 天做好或从大货里挑选，船头板原则并入大货收费，寄出船样的细码单并入大货交给业务出据发票给客人",
+  ]},
+  {title:"定单的执行", steps:[
+    "在和客户正式签定合同并确认客户已执行合同后，要下达生产通知单，生产通知必须尽可能资料齐全、完备、正确，并在指令下达后落实相关部门在合理的时间内接收到正确的指令并已开始执行",
+    "向生产部要生产计划，监督生产指令在各环节中的进行，保证其顺畅；如有客户资料未到，要及时与相关部门和客户进行沟通和调解，做出最合理的生产计划",
+  ]},
+  {title:"确认", steps:[
+    "首先确认生产计划，要清点好主、辅料是否齐备，核对好来料颜色是否一致，保证生产按期顺利开始",
+    "监督和督促生产计划，确认所有保证生产顺利进行的有关指示，书面或实物已交待到有关部门的责任人，并已得到认真执行",
+    "核对所有来料，与客户确认意见一致",
+    "注意客户的变更，如面料颜色、合同数量如出现变更，要在第一时间内通知生产部门，减少不必要的损失",
+  ]},
+  {title:"定单的跟踪 · 生产过程跟单的流程", steps:[
+    "下达生产通知书：跟单员接到业务整理的订单表后，应将其转化为生产通知单，通知单要明确客户所订产品的名称、规格型号、数量、包装要求、交货期等",
+    "分析生产能力：生产通知单下达后，要分析工厂的生产能力，能否按期、按质交货，如不能应采取什么措施，要不要外包",
+    "制定生产计划：生产计划的制定及实施关系着生产管理及交货的成败，跟单员要协助生产人员将订单及时转化为生产通知单",
+    "跟踪生产进度：实际进度与计划进度发生差异，通常有下列原因——原计划错误、机器设备有故障、材料没跟上、不良率和报废率过高、临时工作或特急订单的影响、前制程延误的累积、员工工作情绪低落缺勤或流动率高",
+    "在订单执行过程中，要准时填报生产进度跟进表，及时给客户报告生产进度，并及时汇总资料、整理订单，避免出现疏漏的地方，及时与客户和生产部门沟通，对出现的意外情况及时处理，如上报、与客户协商拖期、协调有关部门采取补救措施等",
+  ]},
+  {title:"出货", steps:[
+    "跟单员应提前 6-7 天提供资料给业务，并与业务协商最后入仓期，跟进装箱单等出货资料，及时安排出货；对于箱唛、条形码、包装袋有不同要求应当引起注意，并以书面形式下达给完成",
+    "制定时间表：出货时间、数量、入货时间，及时通知相关部门（根据入货通知时间及时安排发货，如不能保证交货，及时同业务协商处理）",
+    "确定尾查验货时间，安排尾查验货事宜",
+    "办理内部发货手续",
+    "船样及相关事宜：船样一般在大货出货前 6-10 天给客户寄出",
+  ]},
+  {title:"发票的开具", steps:[
+    "跟单员负责出货后跟进工厂发票的开具，由跟单员负责提供出货装箱单及订单合同交给财务部",
+  ]},
+  {title:"合同总结", steps:[
+    "出货后一周内做出本合同的合同总结，跟工厂的结算情况",
+    "对于费用方面的报帐：差旅费，出差归来后要及时报帐，具体按公司文件执行；其他费用的报帐，力求在费用发生的当月进行报帐，避免费用跨月报帐，影响公司及部门的利润核算",
+  ]},
+];
+
+/* ---------------- quick reference cards ---------------- */
+const quickRefCards = [
+  {cat:"时限", title:"CFA 回签", detail:"客人下单后给出空白CFA，要求 2 天内填写签字盖章扫描回复；否则客人不给正式PO，也不能做大货工艺单。"},
+  {cat:"时限", title:"品质样 / 色样提交", detail:"面辅料样品提交时效：品质样 3 天内，色样 5 天内。"},
+  {cat:"时限", title:"大货颜色样一次性提交", detail:"品质价格最佳的供应商，订单下单后 10 天内一次性提交大货正确颜色样品确认。"},
+  {cat:"时限", title:"需开模的品质样", detail:"报价时品质样未确认、需开模的，最晚 15 天内提交正确颜色品质样品。"},
+  {cat:"时限", title:"原辅材料询价", detail:"原辅材料卡发给供应商询价后，3 天内所有价格都要收齐。"},
+  {cat:"时限", title:"每周五预约入库", detail:"每周五要对下周需入货的货物提前预约，填写《WEEKLY BOOKING FORM》发给 MOVIMODA 相关人。"},
+  {cat:"时限", title:"船头板 / 船样寄出", detail:"大多数客户要求出货前 6-10 天做好或从大货里挑选船头板，寄给客户。"},
+  {cat:"时限", title:"出货资料准备", detail:"跟单员应提前 6-7 天提供资料给业务，协商最后入仓期。"},
+  {cat:"时限", title:"合同总结", detail:"出货后一周内做出本合同的合同总结，核对跟工厂的结算情况。"},
+  {cat:"数量", title:"进口面料预下单比例", detail:"供应商需先下单的，按每个颜色预计数量的 70-80% 先下，剩余尾数尽量保证够最低起订量。"},
+  {cat:"数量", title:"PP样用布量", detail:"一般做 2 件样衣，按单耗调 4 件的样布用量。"},
+  {cat:"数量", title:"大货匹头样分配", detail:"发出大货前发 3 米匹头样：1米寄意大利，1米寄上海测试，0.5米自留，0.5米发工厂确认。"},
+  {cat:"数量", title:"拉链大货样", detail:"供应商额外提供 3-5 条任意颜色拉链，发上海测试用。"},
+  {cat:"数量", title:"金属辅料测试样", detail:"每种大货金属辅料到厂后提供 5-10 个，发到上海客户办公室测试。"},
+  {cat:"数量", title:"开模询价家数", detail:"需要开模的辅料，价格至少要询三家对比，价格质量最好的安排开模。"},
+  {cat:"标准", title:"尾查放行标准", detail:"要求至少完成包装 80% 才可以验货，验货按照 AQL1.5 标准抽验。"},
+  {cat:"标准", title:"中查要求", detail:"要求尽量齐色起码。"},
+  {cat:"标准", title:"MAXMARA 验货要求", detail:"所有订单生产要首查、中查、尾查；每周四报生产报表时要提前预约下周的验货计划。"},
+  {cat:"标准", title:"报价单两套价格", detail:"报价单要把“报客户价”和“实际价”分开格式整理；发给客户的报价单必须只有报价价格，不能出现实际价格。"},
+  {cat:"标准", title:"提交样品份数", detail:"供应商提交样品要一式 3 份：发意大利一份，自己留底一份，工厂生产担当一份，贴大货确认样卡。"},
+  {cat:"样板", title:"头板 Proto-sample", detail:"主要看做工和 FITTING，可用代替面料；有配色时要搭配合适，尺寸做工按客供要求。"},
+  {cat:"样板", title:"推销板 Salesman sample", detail:"作为展销会用的销售样，颜色要对、辅料要齐，代表大货面料一定要好。"},
+  {cat:"样板", title:"产前样 PP-sample", detail:"裁剪前做给客户看的样板，代表大货质量，是客户对大货的检验。"},
+  {cat:"样板", title:"影相板 Photo-sample", detail:"订单确定后、出货前用来扩大宣传的样办，主要看外观效果，要起到门面作用。"},
+  {cat:"样板", title:"齐色齐码板 Size set sample", detail:"针对特定客户订单，先做跳码板确认，再做正确大货布齐色齐码板确认后才可开裁。"},
+  {cat:"样板", title:"洗水样板", detail:"跟单员自己批核，需提前做好面料缩水率测试，保证成衣水洗尺寸符合要求。"},
+  {cat:"样板", title:"船头板 Shipping sample", detail:"出货前 6-10 天做好或从大货里挑选，原则并入大货收费。"},
+];
+
 const tools = [
   ["DS","DeepSeek","文本类主力工具","邮件信息提取、翻译、报价核对、表格数据整理、工艺核对、知识问答"],
   ["豆","豆包","图文办公辅助工具","图片文字识别、内容生成、辅助起草文案、PPT大纲生成"],
@@ -875,11 +1117,80 @@ function renderScenarios(filter){
   `).join("");
 }
 renderScenarios("all");
-document.querySelectorAll(".tab-btn").forEach(btn=>{
+document.querySelectorAll("#scenario-tabs .tab-btn").forEach(btn=>{
   btn.addEventListener("click", ()=>{
-    document.querySelectorAll(".tab-btn").forEach(b=>b.classList.remove("active"));
+    document.querySelectorAll("#scenario-tabs .tab-btn").forEach(b=>b.classList.remove("active"));
     btn.classList.add("active");
     renderScenarios(btn.dataset.f);
+  });
+});
+
+/* ---------------- training accordion ---------------- */
+function renderTraining(role){
+  const data = role==="merch" ? trainingMerch : trainingBusiness;
+  const container = document.getElementById("training-accordion");
+  container.innerHTML = data.map((phase,i)=>`
+    <div class="acc-item" id="train-${role}-${i}">
+      <div class="acc-head" onclick="toggleAcc(this)">
+        <div class="acc-head-left">
+          <span class="acc-phase-no">${String(i+1).padStart(2,'0')}</span>
+          <h4>${phase.title}</h4>
+        </div>
+        <div class="acc-head-right">
+          <span class="acc-count">${phase.steps.length} 个步骤</span>
+          <span class="acc-chevron">▾</span>
+        </div>
+      </div>
+      <div class="acc-body">
+        <ol class="acc-steps">
+          ${phase.steps.map(s=>`<li>${s}</li>`).join("")}
+        </ol>
+      </div>
+    </div>
+  `).join("");
+}
+function toggleAcc(headEl){
+  const item = headEl.parentElement;
+  const body = item.querySelector(".acc-body");
+  const isOpen = item.classList.contains("open");
+  if(isOpen){
+    body.style.maxHeight = "0px";
+    item.classList.remove("open");
+  }else{
+    item.classList.add("open");
+    body.style.maxHeight = body.scrollHeight + "px";
+  }
+}
+renderTraining("business");
+document.querySelectorAll("#training-role-tabs .tab-btn").forEach(btn=>{
+  btn.addEventListener("click", ()=>{
+    document.querySelectorAll("#training-role-tabs .tab-btn").forEach(b=>b.classList.remove("active"));
+    btn.classList.add("active");
+    renderTraining(btn.dataset.role);
+  });
+});
+
+/* ---------------- quick reference cards ---------------- */
+function renderQuickRef(){
+  document.getElementById("quickref-grid").innerHTML = quickRefCards.map((c,i)=>`
+    <div class="qcard" data-cat="${c.cat}" id="qref-${i}">
+      <div class="qc-cat">${c.cat}类</div>
+      <div class="qc-title">${c.title}</div>
+      <div class="qc-detail">${c.detail}</div>
+    </div>
+  `).join("");
+}
+function filterQuickRef(cat){
+  document.querySelectorAll(".qcard").forEach(card=>{
+    card.classList.toggle("hidden", cat!=="all" && card.dataset.cat!==cat);
+  });
+}
+renderQuickRef();
+document.querySelectorAll("#quickref-tabs .tab-btn").forEach(btn=>{
+  btn.addEventListener("click", ()=>{
+    document.querySelectorAll("#quickref-tabs .tab-btn").forEach(b=>b.classList.remove("active"));
+    btn.classList.add("active");
+    filterQuickRef(btn.dataset.cat);
   });
 });
 
@@ -941,6 +1252,9 @@ const searchIndex = [];
 stages.forEach((s,i)=> searchIndex.push({title:s[0], tag:"工作阶段", id:`stage-${i}`, kw:s[0]+s[1]+s[2]+s[3]}));
 pains.forEach((p,i)=> searchIndex.push({title:p[0], tag:"痛点", id:`pain-${i}`, kw:p[0]+p[1]}));
 scenarios.forEach(s=> searchIndex.push({title:`场景${s.no}｜${s.title}`, tag:s.role, id:`scenario-${s.no}`, kw:s.title+s.tool+s.scope+s.effect+s.role}));
+trainingBusiness.forEach((p,i)=> searchIndex.push({title:`培训｜${p.title}`, tag:"业务人员流程", id:`train-business-${i}`, kw:p.title+p.steps.join("")}));
+trainingMerch.forEach((p,i)=> searchIndex.push({title:`培训｜${p.title}`, tag:"跟单人员流程", id:`train-merch-${i}`, kw:p.title+p.steps.join("")}));
+quickRefCards.forEach((c,i)=> searchIndex.push({title:`速记｜${c.title}`, tag:`${c.cat}类`, id:`qref-${i}`, kw:c.title+c.detail+c.cat}));
 tools.forEach((t,i)=> searchIndex.push({title:t[1], tag:"工具", id:`tool-${i}`, kw:t[1]+t[2]+t[3]}));
 apiCompare.forEach((r,i)=> searchIndex.push({title:`API对比｜${r[0]}`, tag:"进阶方案", id:`api-${i}`, kw:r[0]+r[1]+r[2]+"DeepSeek豆包火山方舟API接入"}));
 apiScenarioEffects.forEach(e=> searchIndex.push({title:`场景${e.no}接入API后｜${e.title}`, tag:"进阶方案", id:`api-sc-${e.no}`, kw:e.title+e.now+e.after+"API自动化"}));
@@ -983,12 +1297,26 @@ function finderJumpFirst(){
   if(finderCurrentResults.length>0){ finderJumpTo(finderCurrentResults[0].id); }
 }
 function finderJumpTo(id){
+  if(id.startsWith("train-")){
+    const role = id.startsWith("train-business-") ? "business" : "merch";
+    document.querySelectorAll("#training-role-tabs .tab-btn").forEach(b=> b.classList.toggle("active", b.dataset.role===role));
+    renderTraining(role);
+  }
+  if(id.startsWith("qref-")){
+    document.querySelectorAll("#quickref-tabs .tab-btn").forEach(b=> b.classList.toggle("active", b.dataset.cat==="all"));
+    filterQuickRef("all");
+  }
   const el = document.getElementById(id);
   if(!el) return;
-  const y = el.getBoundingClientRect().top + window.pageYOffset - 84;
-  window.scrollTo({top:y, behavior:"smooth"});
-  el.classList.add("jump-highlight");
-  setTimeout(()=> el.classList.remove("jump-highlight"), 2900);
+  if(el.classList.contains("acc-item") && !el.classList.contains("open")){
+    toggleAcc(el.querySelector(".acc-head"));
+  }
+  setTimeout(()=>{
+    const y = el.getBoundingClientRect().top + window.pageYOffset - 84;
+    window.scrollTo({top:y, behavior:"smooth"});
+    el.classList.add("jump-highlight");
+    setTimeout(()=> el.classList.remove("jump-highlight"), 2900);
+  }, 20);
 }
 
 /* ---------------- font size control ---------------- */
