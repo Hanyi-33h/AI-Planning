@@ -64,11 +64,12 @@
   /* ---------- nav ---------- */
   nav{
     position:sticky; top:0; z-index:40;
-    background:rgba(239,239,234,.86);
+    background:rgba(239,239,234,.94);
     backdrop-filter:blur(10px);
     border-bottom:1px solid var(--line);
   }
-  nav .wrap{ display:flex; align-items:center; gap:20px; height:64px; }
+  .nav-row-top{ display:flex; align-items:center; justify-content:space-between; padding:14px 0 12px; gap:16px; }
+  .nav-row-links{ padding:0 0 12px; border-top:1px solid var(--line); }
   .brand{ display:flex; align-items:center; gap:10px; font-weight:700; font-size:16.5px; letter-spacing:.02em; flex-shrink:0; }
   .brand .mark{
     width:10px; height:10px; border-radius:2px;
@@ -76,13 +77,10 @@
     flex-shrink:0;
   }
   .navlinks{
-    display:flex; gap:22px; font-size:14px; color:var(--ink-70);
-    flex:1 1 auto; min-width:0; overflow-x:auto; white-space:nowrap;
-    scrollbar-width:none; -ms-overflow-style:none;
-    mask-image:linear-gradient(90deg, transparent, #000 16px, #000 calc(100% - 16px), transparent);
+    display:flex; flex-wrap:wrap; gap:8px 22px; font-size:14px; color:var(--ink-70);
+    padding-top:12px;
   }
-  .navlinks::-webkit-scrollbar{ display:none; }
-  .navlinks a{ text-decoration:none; transition:color .2s; flex-shrink:0; }
+  .navlinks a{ text-decoration:none; transition:color .2s; }
   .navlinks a:hover{ color:var(--brass); }
   .navlinks a.active{color: var(--ink); font-weight:600;}
   .fontctrl{ display:flex; align-items:center; gap:8px; flex-shrink:0; }
@@ -496,7 +494,7 @@
     .timeline{ grid-template-columns:1fr; gap:28px;}
     .tl-stage::after{ display:none; }
     .benefit-row{ grid-template-columns:1fr 1fr; }
-    .navlinks{ display:none; }
+    .nav-row-links{ display:none; }
     .fontctrl-lbl{ display:none; }
     .finder-box{ padding:28px 20px 24px; }
     .finder-input-row{ flex-direction:column; }
@@ -510,8 +508,15 @@
 <body>
 
 <nav>
-  <div class="wrap">
+  <div class="wrap nav-row-top">
     <div class="brand"><span class="mark"></span>迪尚华盛 · AI 提效企划</div>
+    <div class="fontctrl">
+      <span class="fontctrl-lbl">文字大小</span>
+      <button onclick="changeFontSize(-1)" aria-label="缩小文字">A-</button>
+      <button onclick="changeFontSize(1)" aria-label="放大文字">A+</button>
+    </div>
+  </div>
+  <div class="wrap nav-row-links">
     <div class="navlinks">
       <a href="#bg">背景目标</a>
       <a href="#pain">痛点</a>
@@ -522,11 +527,6 @@
       <a href="#api">API进阶方案</a>
       <a href="#path">实施路径</a>
       <a href="#risk">风险提示</a>
-    </div>
-    <div class="fontctrl">
-      <span class="fontctrl-lbl">文字大小</span>
-      <button onclick="changeFontSize(-1)" aria-label="缩小文字">A-</button>
-      <button onclick="changeFontSize(1)" aria-label="放大文字">A+</button>
     </div>
   </div>
 </nav>
